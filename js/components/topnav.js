@@ -110,6 +110,82 @@ const Topnav = (() => {
       });
     }
 
+    // Notifications panel
+    var notifBtn = document.getElementById('notifBtn');
+    if (notifBtn) {
+      notifBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var existing = document.getElementById('notifPanel');
+        if (existing) { existing.remove(); return; }
+
+        var reviews  = Store.get('reviews') || [];
+        var pending  = reviews.filter(function(r) { return r.status === 'pending' || r.status === 'new'; })
+                              .slice(0, 8);
+        var lang     = I18n.getLang();
+        var fr       = lang !== 'en';
+
+        var items = pending.length
+          ? pending.map(function(r) {
+              var stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+              return '<div class="notif-item" data-id="' + r.id + '" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #F3F4F6;transition:background .15s;" ' +
+                'onmouseover="this.style.background=\'#F9FAFB\'" onmouseout="this.style.background=\'#fff\'">' +
+                '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">' +
+                  '<div style="font-size:12.5px;font-weight:600;color:#111827;">' + escHtml(r.author) + '</div>' +
+                  '<div style="font-size:10px;color:#F59E0B;white-space:nowrap;">' + stars + '</div>' +
+                '</div>' +
+                '<div style="font-size:11.5px;color:#6B7280;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;">' +
+                  escHtml(r.text ? r.text.slice(0, 60) + (r.text.length > 60 ? '…' : '') : '') +
+                '</div>' +
+              '</div>';
+            }).join('')
+          : '<div style="padding:24px;text-align:center;font-size:13px;color:#6B7280;">' +
+              (fr ? '✓ Tous les avis ont une réponse' : '✓ All reviews have been answered') +
+            '</div>';
+
+        var panel = document.createElement('div');
+        panel.id = 'notifPanel';
+        panel.style.cssText = 'position:absolute;top:calc(100% + 8px);right:0;width:280px;background:#fff;' +
+          'border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:500;overflow:hidden;';
+        panel.innerHTML =
+          '<div style="padding:12px 14px;border-bottom:1px solid #F3F4F6;display:flex;justify-content:space-between;align-items:center;">' +
+            '<span style="font-size:13px;font-weight:700;color:#111827;">' + (fr ? 'Avis sans réponse' : 'Unanswered reviews') + '</span>' +
+            (pending.length ? '<span style="background:#EF4444;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;">' + pending.length + '</span>' : '') +
+          '</div>' +
+          items +
+          (pending.length ? '<div style="padding:10px 14px;border-top:1px solid #F3F4F6;">' +
+            '<a href="#/reviews" onclick="document.getElementById(\'notifPanel\').remove();" ' +
+            'style="font-size:12px;color:#4F46E5;text-decoration:none;font-weight:600;">' +
+            (fr ? 'Voir tous les avis →' : 'View all reviews →') + '</a></div>' : '');
+
+        // Position relative to notifBtn
+        notifBtn.style.position = 'relative';
+        notifBtn.appendChild(panel);
+
+        // Click on review item → open slideover
+        panel.querySelectorAll('.notif-item').forEach(function(item) {
+          item.addEventListener('click', function() {
+            panel.remove();
+            var id = item.getAttribute('data-id');
+            var rev = (Store.get('reviews') || []).find(function(r) { return r.id === id || r.id == id; });
+            if (rev && window.Slideover) {
+              if (window.location.hash !== '#/reviews') Router.navigate('/reviews');
+              setTimeout(function() { Slideover.open(rev, null); }, 100);
+            }
+          });
+        });
+
+        // Close on outside click
+        setTimeout(function() {
+          document.addEventListener('click', function closePanel(e) {
+            if (!panel.contains(e.target) && e.target !== notifBtn) {
+              panel.remove();
+              document.removeEventListener('click', closePanel);
+            }
+          });
+        }, 0);
+      });
+    }
+
     // Search: clic sur l'icône → focus input
     var searchBox = document.querySelector('.search-box');
     var search    = document.getElementById('globalSearch');
