@@ -1,0 +1,127 @@
+var PrivacyModal = (function() {
+  'use strict';
+
+  function show() {
+    var lang = window.I18n ? I18n.getLang() : 'fr';
+    var fr = lang !== 'en';
+
+    var overlay = document.createElement('div');
+    overlay.id  = 'privacyOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;';
+
+    overlay.innerHTML =
+      '<div style="background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.2);">' +
+
+        // Header
+        '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:16px 16px 0 0;padding:24px 28px;position:sticky;top:0;">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+            '<div>' +
+              '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">🔒 ' + (fr ? 'Sécurité & Confidentialité' : 'Security & Privacy') + '</div>' +
+              '<div style="font-size:12px;color:rgba(255,255,255,.75);">SmartFeedback AI</div>' +
+            '</div>' +
+            '<button onclick="PrivacyModal.close()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">×</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<div style="padding:28px;">' +
+
+          // What we access
+          '<div style="margin-bottom:24px;">' +
+            '<h3 style="font-size:14px;font-weight:700;color:#111827;margin:0 0 12px;display:flex;align-items:center;gap:8px;">' +
+              '<span style="background:#D1FAE5;color:#065F46;width:24px;height:24px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;">✓</span>' +
+              (fr ? 'Ce que nous accédons (Google Business)' : 'What we access (Google Business)') +
+            '</h3>' +
+            '<ul style="margin:0;padding:0 0 0 16px;font-size:13.5px;color:#374151;line-height:2;">' +
+              '<li>' + (fr ? 'Lecture de vos avis clients Google' : 'Reading your Google customer reviews') + '</li>' +
+              '<li>' + (fr ? 'Publication de réponses à vos avis' : 'Publishing replies to your reviews') + '</li>' +
+              '<li>' + (fr ? 'Informations de base de votre fiche (nom, adresse)' : 'Basic info from your listing (name, address)') + '</li>' +
+            '</ul>' +
+          '</div>' +
+
+          // What we DON'T access
+          '<div style="background:#FEF2F2;border-radius:10px;padding:16px;margin-bottom:24px;">' +
+            '<h3 style="font-size:14px;font-weight:700;color:#991B1B;margin:0 0 10px;display:flex;align-items:center;gap:8px;">' +
+              '<span style="font-size:16px;">🚫</span>' +
+              (fr ? 'Ce que nous n\'accédons JAMAIS' : 'What we NEVER access') +
+            '</h3>' +
+            '<ul style="margin:0;padding:0 0 0 16px;font-size:13.5px;color:#374151;line-height:2;">' +
+              '<li>' + (fr ? 'Votre mot de passe Google' : 'Your Google password') + '</li>' +
+              '<li>' + (fr ? 'Vos emails Gmail' : 'Your Gmail emails') + '</li>' +
+              '<li>' + (fr ? 'Vos contacts, calendrier, Drive' : 'Your contacts, calendar, Drive') + '</li>' +
+              '<li>' + (fr ? 'Vos autres services Google' : 'Your other Google services') + '</li>' +
+              '<li>' + (fr ? 'Vos informations financières' : 'Your financial information') + '</li>' +
+            '</ul>' +
+          '</div>' +
+
+          // How OAuth works
+          '<div style="background:#EFF6FF;border-radius:10px;padding:16px;margin-bottom:24px;">' +
+            '<h3 style="font-size:14px;font-weight:700;color:#1E40AF;margin:0 0 10px;display:flex;align-items:center;gap:8px;">' +
+              '<span style="font-size:16px;">ℹ️</span>' +
+              (fr ? 'Comment ça fonctionne (OAuth 2.0)' : 'How it works (OAuth 2.0)') +
+            '</h3>' +
+            '<p style="font-size:13px;color:#374151;margin:0;line-height:1.7;">' +
+              (fr
+                ? 'La connexion Google utilise le protocole <strong>OAuth 2.0</strong> — la même technologie que "Se connecter avec Google" sur tous les grands sites web. <strong>Aucun mot de passe n\'est jamais partagé avec nous.</strong> Google gère entièrement l\'authentification et vous montre exactement les permissions demandées avant que vous acceptiez.'
+                : 'The Google connection uses <strong>OAuth 2.0</strong> — the same technology as "Sign in with Google" on all major websites. <strong>No password is ever shared with us.</strong> Google fully manages authentication and shows you exactly what permissions are requested before you accept.') +
+            '</p>' +
+          '</div>' +
+
+          // Revoke access
+          '<div style="border:1px solid #E5E7EB;border-radius:10px;padding:16px;margin-bottom:24px;">' +
+            '<h3 style="font-size:14px;font-weight:700;color:#111827;margin:0 0 10px;display:flex;align-items:center;gap:8px;">' +
+              '<span style="font-size:16px;">🔑</span>' +
+              (fr ? 'Révoquer l\'accès à tout moment' : 'Revoke access at any time') +
+            '</h3>' +
+            '<p style="font-size:13px;color:#374151;margin:0 0 10px;line-height:1.7;">' +
+              (fr
+                ? 'Vous pouvez annuler l\'accès en 1 clic depuis votre compte Google :'
+                : 'You can cancel access in 1 click from your Google account:') +
+            '</p>' +
+            '<ol style="margin:0;padding:0 0 0 16px;font-size:13px;color:#374151;line-height:2;">' +
+              '<li>' + (fr ? 'Aller sur myaccount.google.com' : 'Go to myaccount.google.com') + '</li>' +
+              '<li>' + (fr ? 'Sécurité → Applications tierces' : 'Security → Third-party apps') + '</li>' +
+              '<li>' + (fr ? 'Trouver SmartFeedback AI → Supprimer l\'accès' : 'Find SmartFeedback AI → Remove access') + '</li>' +
+            '</ol>' +
+          '</div>' +
+
+          // Data hosting
+          '<div style="border:1px solid #E5E7EB;border-radius:10px;padding:16px;margin-bottom:28px;">' +
+            '<h3 style="font-size:14px;font-weight:700;color:#111827;margin:0 0 10px;display:flex;align-items:center;gap:8px;">' +
+              '<span style="font-size:16px;">🏢</span>' +
+              (fr ? 'Hébergement des données' : 'Data hosting') +
+            '</h3>' +
+            '<ul style="margin:0;padding:0 0 0 16px;font-size:13px;color:#374151;line-height:2;">' +
+              '<li>' + (fr ? 'Serveurs : Render.com (États-Unis)' : 'Servers: Render.com (United States)') + '</li>' +
+              '<li>' + (fr ? 'Base de données : Neon PostgreSQL (États-Unis)' : 'Database: Neon PostgreSQL (United States)') + '</li>' +
+              '<li>' + (fr ? 'Frontend : Netlify (CDN mondial)' : 'Frontend: Netlify (Global CDN)') + '</li>' +
+              '<li>' + (fr ? 'Aucune vente de données à des tiers' : 'No data sold to third parties') + '</li>' +
+            '</ul>' +
+          '</div>' +
+
+          // Close button
+          '<button onclick="PrivacyModal.close()" style="width:100%;background:#4F46E5;color:#fff;border:none;padding:13px;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">' +
+            (fr ? '✓ Compris' : '✓ Got it') +
+          '</button>' +
+
+          '<p style="text-align:center;font-size:11px;color:#9CA3AF;margin:12px 0 0;">' +
+            (fr ? 'Questions ? ' : 'Questions? ') +
+            '<a href="mailto:jeaneveillard@gmail.com" style="color:#4F46E5;">jeaneveillard@gmail.com</a>' +
+          '</p>' +
+
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) PrivacyModal.close();
+    });
+  }
+
+  function close() {
+    var el = document.getElementById('privacyOverlay');
+    if (el) document.body.removeChild(el);
+  }
+
+  return { show: show, close: close };
+})();
+window.PrivacyModal = PrivacyModal;

@@ -89,6 +89,11 @@ var LoginPage = (function() {
       '    </a>',
 
       '    <p style="font-size:11px;color:#9CA3AF;text-align:center;margin:16px 0 0;">' + t('login_note') + '</p>',
+      '    <p style="font-size:11px;text-align:center;margin:10px 0 0;">',
+      '      <a href="#" onclick="event.preventDefault();PrivacyModal.show();" style="color:#4F46E5;text-decoration:none;">',
+      '        🔒 ' + (lang === 'en' ? 'Security & Privacy' : 'Sécurité & Confidentialité') +
+      '      </a>',
+      '    </p>',
       '  </div>',
       '</div>'
     ].join('');
