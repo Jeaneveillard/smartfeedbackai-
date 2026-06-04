@@ -125,6 +125,16 @@
     });
   }
 
+  function pingAndBoot() {
+    var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    var isFile  = (window.location.protocol === 'file:');
+    if (isLocal || isFile) { boot(); return; }
+    // Ping Render to wake it up before making CORS requests
+    fetch('https://smartfeedbackai-api.onrender.com/health', { mode: 'cors' })
+      .then(function() { boot(); })
+      .catch(function() { boot(); }); // proceed even if ping fails
+  }
+
   function boot() {
     var urlParams = new URLSearchParams(window.location.search);
 
@@ -234,9 +244,9 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', pingAndBoot);
   } else {
-    boot();
+    pingAndBoot();
   }
 
   document.addEventListener('sfai:lang-changed', function() {
