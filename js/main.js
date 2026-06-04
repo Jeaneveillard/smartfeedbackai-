@@ -129,10 +129,27 @@
     var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
     var isFile  = (window.location.protocol === 'file:');
     if (isLocal || isFile) { boot(); return; }
-    // Ping Render to wake it up before making CORS requests
-    fetch('https://smartfeedbackai-api.onrender.com/health', { mode: 'cors' })
-      .then(function() { boot(); })
-      .catch(function() { boot(); }); // proceed even if ping fails
+
+    var attempts = 0;
+    var maxAttempts = 8; // try for ~60s total
+
+    function tryPing() {
+      attempts++;
+      fetch('https://smartfeedbackai-api.onrender.com/health', { mode: 'cors' })
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (d && d.ok) { boot(); }
+          else { retry(); }
+        })
+        .catch(function() { retry(); });
+    }
+
+    function retry() {
+      if (attempts >= maxAttempts) { boot(); return; } // give up, let boot handle the error
+      setTimeout(tryPing, 8000);
+    }
+
+    tryPing();
   }
 
   function boot() {
