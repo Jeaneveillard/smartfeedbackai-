@@ -49,6 +49,15 @@ var AdminPage = (function () {
           '<div style="color:var(--txt2);">' + fmtDate(t.subscription_end) + '</div>' +
         '</td>' +
         '<td style="padding:12px 16px;">' + subBadge(t) + '</td>' +
+        '<td style="padding:12px 16px;text-align:center;">' +
+          '<div style="font-size:14px;font-weight:700;color:#111827;">' + (t.total || 0) + '</div>' +
+          '<div style="font-size:11px;color:var(--txt3);">total</div>' +
+        '</td>' +
+        '<td style="padding:12px 16px;text-align:center;">' +
+          (t.pending > 0
+            ? '<div style="background:#FEF2F2;color:#B91C1C;font-size:13px;font-weight:800;padding:3px 10px;border-radius:12px;display:inline-block;">' + t.pending + ' 🔴</div>'
+            : '<div style="background:#ECFDF5;color:#059669;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;display:inline-block;">✓</div>') +
+        '</td>' +
         '<td style="padding:12px 16px;">' +
           '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
             '<button class="btn btn-soft admin-start" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;">+30j</button>' +
@@ -113,6 +122,8 @@ var AdminPage = (function () {
             '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Plan</th>' +
             '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Début / Fin</th>' +
             '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Jours</th>' +
+            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:center;">Avis</th>' +
+            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:center;">En attente</th>' +
             '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Actions</th>' +
           '</tr></thead>' +
           '<tbody>' + rows + '</tbody>' +

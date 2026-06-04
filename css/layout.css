@@ -131,6 +131,8 @@
 /* ─── Content ─── */
 .content { padding: 28px 32px; max-width: 1400px; }
 
+#app { padding: 28px 32px; }
+
 /* ═══════════════════════════════════════
    RESPONSIVE LAYOUT
 ═══════════════════════════════════════ */
@@ -140,5 +142,6 @@
     .main { margin-left: 0; }
     .hamburger { display: flex; }
     .content { padding: 18px 16px; }
+    #app { padding: 18px 16px; }
     .topnav  { padding: 0 16px; }
 }
