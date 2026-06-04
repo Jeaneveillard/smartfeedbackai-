@@ -1,0 +1,30 @@
+{
+  "business": {
+    "name": "Le Petit Bistro",
+    "street": "1234 Saint-Laurent Blvd",
+    "city": "Montreal",
+    "stateProvince": "QC",
+    "postalCode": "H2X 2S9",
+    "country": "CA",
+    "category": "Restaurant"
+  },
+  "ai": {
+    "provider": "mock",
+    "apiKey": "",
+    "customProvider": {
+      "name": "",
+      "endpoint": "",
+      "model": ""
+    },
+    "defaultTone": "professional",
+    "language": "fr"
+  },
+  "billing": {
+    "currency": "CAD"
+  },
+  "integrations": {
+    "google": true,
+    "tripadvisor": true,
+    "yelp": false
+  }
+}

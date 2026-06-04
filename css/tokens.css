@@ -1,0 +1,30 @@
+/* ─── Design Tokens ─── */
+:root {
+    --primary:        #4F46E5;
+    --primary-dark:   #4338CA;
+    --primary-light:  #EEF2FF;
+    --primary-mid:    #C7D2FE;
+    --primary-ultra:  #F5F3FF;
+    --sidebar-bg:     #1E1B4B;
+    --sidebar-hover:  rgba(255,255,255,0.06);
+    --sidebar-active: rgba(99,102,241,0.25);
+    --bg:             #F4F5F9;
+    --card:           #FFFFFF;
+    --border:         #E5E7EB;
+    --border-faint:   #F3F4F6;
+    --txt1:           #111827;
+    --txt2:           #6B7280;
+    --txt3:           #9CA3AF;
+    --green:          #10B981;
+    --green-bg:       #ECFDF5;
+    --orange:         #F97316;
+    --orange-bg:      #FFF7ED;
+    --yellow:         #F59E0B;
+    --red:            #EF4444;
+    --r:              12px;
+    --r-sm:           8px;
+    --shadow:         0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-up:      0 8px 24px rgba(79,70,229,0.15);
+    --t:              all 0.2s cubic-bezier(.4,0,.2,1);
+    --sidebar-w:      240px;
+}

@@ -1,0 +1,271 @@
+/* ═══════════════════════════════════════
+   SETTINGS — Layout (grid: 200px 1fr)
+═══════════════════════════════════════ */
+.settings-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* Legacy flex layout alias */
+.settings-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* ─── Settings nav ─── */
+.settings-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-shrink: 0;
+    width: 220px;
+}
+
+/* Generic nav item (used in settings-layout grid variant) */
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--txt2);
+    cursor: pointer;
+    transition: var(--t);
+    text-decoration: none;
+}
+.settings-nav-item:hover {
+    background: var(--border-faint);
+    color: var(--txt1);
+}
+.settings-nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Legacy tab alias */
+.settings-tab {
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--txt2);
+    cursor: pointer;
+    transition: var(--t);
+}
+.settings-tab:hover {
+    background: var(--border-faint);
+    color: var(--txt1);
+}
+.settings-tab.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ─── Settings panel ─── */
+.settings-panel,
+.settings-content {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 26px;
+    min-height: 400px;
+}
+
+.settings-section {
+    display: none;
+    animation: fadeUp .3s ease both;
+}
+.settings-section.active { display: block; }
+
+.settings-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -.3px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════ */
+.form-group { margin-bottom: 20px; }
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--txt1);
+    margin-bottom: 8px;
+}
+
+.form-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--txt1);
+    background: var(--card);
+    transition: var(--t);
+}
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 400px;
+}
+
+/* ─── Toggle row ─── */
+.toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-faint);
+    max-width: 400px;
+}
+
+.toggle-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ─── Toggle switch ─── */
+.toggle,
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggle input,
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider,
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--border);
+    transition: background-color .4s, transform .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider::before,
+.slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    transition: transform .4s;
+    border-radius: 50%;
+}
+
+.toggle input:checked + .toggle-slider,
+input:checked + .slider {
+    background-color: var(--green);
+}
+
+.toggle input:checked + .toggle-slider::before,
+input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* ═══════════════════════════════════════
+   INTEGRATIONS
+═══════════════════════════════════════ */
+.integration-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-faint);
+}
+.integration-item:last-child { border-bottom: none; }
+
+.integration-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+.integration-status.connected {
+    background: var(--green-bg);
+    color: var(--green);
+}
+.integration-status.disconnected {
+    background: var(--border-faint);
+    color: var(--txt3);
+}
+
+/* ─── Save row ─── */
+.btn-save-row,
+.settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 860px) {
+    .settings-layout {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .settings-container {
+        flex-direction: column;
+    }
+    .settings-nav {
+        flex-direction: row;
+        width: 100%;
+        overflow-x: auto;
+    }
+    .settings-tab,
+    .settings-nav-item {
+        white-space: nowrap;
+    }
+}
+@media (max-width: 640px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}

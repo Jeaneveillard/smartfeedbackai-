@@ -1,0 +1,14 @@
+{
+  "name": "smartfeedbackai",
+  "version": "1.0.0",
+  "description": "Tableau de bord de gestion d'avis clients avec réponses IA",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}

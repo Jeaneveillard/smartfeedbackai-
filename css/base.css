@@ -1,0 +1,21 @@
+/* ─── Reset ─── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--txt1);
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,129 @@
+/* ═══════════════════════════════════════
+   REVIEWS — Toolbar
+═══════════════════════════════════════ */
+.reviews-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.reviews-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reviews-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Legacy alias kept for backwards compat */
+.reviews-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filters-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ─── Select filter ─── */
+.select-filter,
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    font-size: 13px;
+    color: var(--txt1);
+    background: var(--card);
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: var(--t);
+}
+.select-filter:focus,
+.filter-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* ═══════════════════════════════════════
+   PAGINATION
+═══════════════════════════════════════ */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    padding: 15px 0;
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--card);
+    color: var(--txt2);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--t);
+}
+.pagination-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+}
+.pagination-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.pagination-info,
+.page-info {
+    font-size: 13px;
+    color: var(--txt2);
+    font-weight: 500;
+}
+
+/* ═══════════════════════════════════════
+   EMPTY STATE
+═══════════════════════════════════════ */
+.no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 20px;
+    color: var(--txt3);
+    text-align: center;
+}
+.no-results svg {
+    opacity: .35;
+}
+.no-results p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--txt2);
+}
+.no-results span {
+    font-size: 13px;
+}
