@@ -46,10 +46,19 @@
     return (window.Store ? window.Store.get('settings') : null) || {};
   }
 
-  function saveSettings(patch) {
+  function saveSettings(patch, callback) {
     var current = getSettings();
     var merged  = Object.assign({}, current, patch);
+    ['business','ai','integrations','billing'].forEach(function(k) {
+      if (patch[k]) merged[k] = Object.assign({}, current[k] || {}, patch[k]);
+    });
     if (window.Store) window.Store.set('settings', merged);
+    // Persist to backend (non-blocking)
+    if (window.API) {
+      API.put('/api/settings', merged)
+        .then(function(saved) { if (window.Store) window.Store.set('settings', saved); if (callback) callback(); })
+        .catch(function() { if (callback) callback(); });
+    } else if (callback) { callback(); }
   }
 
   /* ── Render nav ──────────────────────────────── */

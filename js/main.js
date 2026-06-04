@@ -238,6 +238,9 @@
 
       Store.init(data.reviews || [], settings);
       Store.set('me', me);
+      // Update browser tab title with business name
+      var bizTitle = (settings && settings.business && settings.business.name) || (me && me.name) || 'SmartFeedback AI';
+      document.title = 'SmartFeedback AI — ' + bizTitle;
       renderShell();
       Sidebar.render();
       Topnav.render();

@@ -247,35 +247,34 @@ var AdminPage = (function () {
 
         API.post('/admin/tenants/' + id + '/reset-password', {})
           .then(function (data) {
-            var pw = data.credentials.password;
-            // Show modal-style box
+            var pw = data.tempPassword; // only present if email failed
+            var emailSent = data.emailSent;
             var modal = document.createElement('div');
             modal.style.cssText =
               'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;' +
               'display:flex;align-items:center;justify-content:center;';
             modal.innerHTML =
               '<div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);">' +
-                '<div style="font-size:16px;font-weight:800;margin-bottom:6px;">🔑 Nouveau mot de passe</div>' +
-                '<div style="font-size:13px;color:#6B7280;margin-bottom:20px;">Pour <strong>' + esc(name) + '</strong> (@' + esc(username) + ')</div>' +
-                '<div style="margin-bottom:16px;">' +
-                  '<label style="font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Mot de passe</label>' +
-                  '<div style="display:flex;gap:8px;align-items:center;">' +
-                    '<div style="position:relative;flex:1;">' +
-                      '<input id="pwdModalInput" type="password" value="' + esc(pw) + '" readonly ' +
-                        'style="width:100%;padding:10px 40px 10px 12px;border:1.5px solid #E5E7EB;border-radius:8px;' +
-                        'font-size:15px;font-family:monospace;letter-spacing:2px;box-sizing:border-box;background:#F9FAFB;">' +
-                      '<button id="pwdEyeBtn" type="button" ' +
-                        'style="position:absolute;right:10px;top:50%;transform:translateY(-50%);' +
-                        'background:none;border:none;cursor:pointer;color:#9CA3AF;padding:4px;">' +
-                        '<svg id="pwdEyeIco" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' +
-                          '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>' +
-                        '</svg>' +
-                      '</button>' +
-                    '</div>' +
-                    '<button id="pwdCopyBtn" class="btn btn-soft" style="white-space:nowrap;font-size:12px;padding:8px 14px;">Copier</button>' +
-                  '</div>' +
-                '</div>' +
-                '<p style="font-size:12px;color:#F59E0B;margin:0 0 20px;">⚠️ Partagez ce mot de passe maintenant — il ne sera plus disponible.</p>' +
+                '<div style="font-size:16px;font-weight:800;margin-bottom:6px;">🔑 Réinitialisation du mot de passe</div>' +
+                '<div style="font-size:13px;color:#6B7280;margin-bottom:16px;">Pour <strong>' + esc(name) + '</strong> (@' + esc(username) + ')</div>' +
+                (emailSent
+                  ? '<div style="background:#ECFDF5;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#065F46;">✅ Email envoyé au client avec le nouveau mot de passe.</div>'
+                  : '<div style="background:#FEF3C7;border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#92400E;">⚠️ Email non envoyé (SMTP). Partagez manuellement :</div>') +
+                (pw
+                  ? '<div style="margin-bottom:16px;">' +
+                      '<div style="display:flex;gap:8px;align-items:center;">' +
+                        '<div style="position:relative;flex:1;">' +
+                          '<input id="pwdModalInput" type="password" value="' + esc(pw) + '" readonly ' +
+                            'style="width:100%;padding:10px 40px 10px 12px;border:1.5px solid #E5E7EB;border-radius:8px;' +
+                            'font-size:15px;font-family:monospace;letter-spacing:2px;box-sizing:border-box;background:#F9FAFB;">' +
+                          '<button id="pwdEyeBtn" type="button" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9CA3AF;padding:4px;">' +
+                            '<svg id="pwdEyeIco" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' +
+                          '</button>' +
+                        '</div>' +
+                        '<button id="pwdCopyBtn" class="btn btn-soft" style="white-space:nowrap;font-size:12px;padding:8px 14px;">Copier</button>' +
+                      '</div>' +
+                    '</div>'
+                  : '') +
                 '<button id="pwdCloseBtn" class="btn btn-primary" style="width:100%;">Fermer</button>' +
               '</div>';
             document.body.appendChild(modal);
