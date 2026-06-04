@@ -57,6 +57,7 @@ var AdminPage = (function () {
               ? '<button class="btn btn-danger admin-deactivate" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" style="font-size:11.5px;padding:4px 10px;">Désactiver</button>'
               : '<button class="btn btn-soft admin-activate" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" style="font-size:11.5px;padding:4px 10px;">Activer</button>') +
             '<button class="btn btn-ghost admin-reset-pw" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" data-username="' + esc(t.username || t.email) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;">🔑</button>' +
+            '<button class="btn btn-soft admin-preview" data-id="' + esc(t.id) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;color:var(--primary);">👁 Voir</button>' +
           '</div>' +
         '</td>' +
       '</tr>';
@@ -304,6 +305,28 @@ var AdminPage = (function () {
             el.disabled = false; el.textContent = '🔑';
           })
           .catch(function () { Toast.show('Erreur', 'error'); el.disabled = false; el.textContent = '🔑'; });
+      });
+    });
+
+    /* Preview — view dashboard as client */
+    container.querySelectorAll('.admin-preview').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var id   = el.getAttribute('data-id');
+        var name = el.getAttribute('data-name');
+        el.disabled = true; el.textContent = '…';
+
+        API.post('/admin/tenants/' + id + '/preview', {})
+          .then(function(data) {
+            // Save admin JWT so we can return
+            localStorage.setItem('sfai_jwt_admin', localStorage.getItem('sfai_jwt'));
+            localStorage.setItem('sfai_preview_name', name);
+            localStorage.setItem('sfai_jwt', data.token);
+            window.location.reload();
+          })
+          .catch(function() {
+            Toast.show('Erreur', 'error');
+            el.disabled = false; el.textContent = '👁 Voir';
+          });
       });
     });
   }

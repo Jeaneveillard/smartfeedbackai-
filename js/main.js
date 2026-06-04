@@ -220,7 +220,7 @@
       }
 
       Store.init(data.reviews || [], settings);
-      Store.set('me', me); // garde les infos du tenant (googleConnected, google_location_id)
+      Store.set('me', me);
       renderShell();
       Sidebar.render();
       Topnav.render();
@@ -228,6 +228,30 @@
       Slideover.initEvents();
       registerRoutes();
       Router.init();
+
+      // Show preview banner if admin is viewing as a client
+      var adminJwt = localStorage.getItem('sfai_jwt_admin');
+      var previewName = localStorage.getItem('sfai_preview_name');
+      if (adminJwt && previewName) {
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#4F46E5;color:#fff;' +
+          'padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:1000;' +
+          'font-family:Inter,sans-serif;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.15);';
+        banner.innerHTML =
+          '<span>👁 <strong>Mode aperçu</strong> — Vous voyez le dashboard de <strong>' + previewName + '</strong></span>' +
+          '<button id="exitPreviewBtn" style="background:rgba(255,255,255,.2);border:none;color:#fff;' +
+            'padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">' +
+            '← Retour admin' +
+          '</button>';
+        document.body.appendChild(banner);
+        document.getElementById('exitPreviewBtn').addEventListener('click', function() {
+          localStorage.setItem('sfai_jwt', adminJwt);
+          localStorage.removeItem('sfai_jwt_admin');
+          localStorage.removeItem('sfai_preview_name');
+          window.location.hash = '#/admin';
+          window.location.reload();
+        });
+      }
     }).catch(function(err) {
       var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
       var msg = isLocal
