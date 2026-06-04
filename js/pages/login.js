@@ -131,26 +131,55 @@ var LoginPage = (function() {
         btn.textContent = lang === 'en' ? 'Signing in…' : 'Connexion…';
         errEl.style.display = 'none';
 
+        // Show wake-up message after 5s (Render free tier can take ~50s)
+        var wakeTimer = setTimeout(function() {
+          if (btn.disabled) {
+            errEl.textContent = lang === 'en'
+              ? '⏳ Server is waking up, please wait (~30s)…'
+              : '⏳ Le serveur se réveille, veuillez patienter (~30s)…';
+            errEl.style.background = '#EFF6FF';
+            errEl.style.borderColor = '#BFDBFE';
+            errEl.style.color = '#1D4ED8';
+            errEl.style.display = 'block';
+          }
+        }, 5000);
+
+        var controller = new AbortController();
+        var timeoutId  = setTimeout(function() { controller.abort(); }, 60000);
+
         fetch(getApiBase() + '/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email, password: password })
+          body: JSON.stringify({ email: email, password: password }),
+          signal: controller.signal
         })
         .then(function(res) { return res.json().then(function(d) { return { status: res.status, data: d }; }); })
         .then(function(r) {
+          clearTimeout(wakeTimer);
+          clearTimeout(timeoutId);
           if (r.status !== 200 || !r.data.token) {
             errEl.textContent = r.data.error || (lang === 'en' ? 'Incorrect credentials.' : 'Identifiants incorrects.');
+            errEl.style.background = '#FEF2F2';
+            errEl.style.borderColor = '#FECACA';
+            errEl.style.color = '#B91C1C';
             errEl.style.display = 'block';
             btn.disabled = false;
             btn.textContent = lang === 'en' ? 'Sign in' : 'Se connecter';
             return;
           }
-          // Store JWT and reload
           localStorage.setItem('sfai_jwt', r.data.token);
           window.location.reload();
         })
-        .catch(function() {
-          errEl.textContent = lang === 'en' ? 'Connection error. Is the server running?' : 'Erreur de connexion. Le serveur est-il démarré ?';
+        .catch(function(err) {
+          clearTimeout(wakeTimer);
+          clearTimeout(timeoutId);
+          var msg = (err && err.name === 'AbortError')
+            ? (lang === 'en' ? 'Request timed out. Please try again.' : 'Délai dépassé. Veuillez réessayer.')
+            : (lang === 'en' ? 'Connection error. Is the server running?' : 'Erreur de connexion. Le serveur est-il démarré ?');
+          errEl.textContent = msg;
+          errEl.style.background = '#FEF2F2';
+          errEl.style.borderColor = '#FECACA';
+          errEl.style.color = '#B91C1C';
           errEl.style.display = 'block';
           btn.disabled = false;
           btn.textContent = lang === 'en' ? 'Sign in' : 'Se connecter';

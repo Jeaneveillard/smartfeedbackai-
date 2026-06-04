@@ -150,9 +150,11 @@
 
     // Demo mode : explicitement activé via localStorage OU protocol file://
     // Sur localhost/127.0.0.1 avec npx serve, on est en mode API (backend sur :3001)
+    var isLocalhost    = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
     var isFileProtocol = (window.location.protocol === 'file:');
-    var demoForced = localStorage.getItem('sfai_demo') === 'true';
-    var demoMode = demoForced || isFileProtocol;
+    var demoForced     = localStorage.getItem('sfai_demo') === 'true';
+    // Demo on: file://, explicit flag, or localhost with no JWT (dev convenience)
+    var demoMode = demoForced || isFileProtocol || (isLocalhost && !jwt);
 
     // Demo mode: no backend configured → load mock JSON directly
     if (!jwt && demoMode) {
