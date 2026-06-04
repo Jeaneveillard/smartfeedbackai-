@@ -271,16 +271,40 @@
       }
     }).catch(function(err) {
       var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-      var msg = isLocal
-        ? 'Lancez un serveur local : <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npx serve .</code>'
-        : '⏳ Le serveur se réveille (~30s). <button onclick="window.location.reload()" style="background:#4F46E5;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;margin-top:8px;">Réessayer</button>';
-      document.body.innerHTML =
-        '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:12px;color:#6B7280">' +
-        '<svg width="40" height="40" fill="none" stroke="#4F46E5" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
-        '<strong style="color:#111827;font-size:16px">Connexion au serveur…</strong>' +
-        '<p style="font-size:13px;text-align:center;max-width:320px">' + msg + '</p>' +
-        '</div>';
+      if (isLocal) {
+        document.body.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:12px;color:#6B7280">' +
+          '<strong style="color:#111827;font-size:16px">Serveur local non démarré</strong>' +
+          '<p style="font-size:13px;">Lancez : <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npx serve .</code></p>' +
+          '</div>';
+        return;
+      }
       console.error(err);
+      // Auto-retry every 10s — show countdown
+      var countdown = 10;
+      function showRetry(n) {
+        document.body.innerHTML =
+          '<div id="retryScreen" style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:14px;color:#6B7280">' +
+          '<svg width="44" height="44" fill="none" stroke="#4F46E5" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+          '<strong style="color:#111827;font-size:16px">Connexion au serveur…</strong>' +
+          '<p style="font-size:13px;color:#6B7280;margin:0;">⏳ Le serveur se réveille. Nouvelle tentative dans <strong id="retryCountdown">' + n + '</strong>s</p>' +
+          '<button id="retryNowBtn" style="background:#4F46E5;color:#fff;border:none;padding:9px 20px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;">Réessayer maintenant</button>' +
+          '</div>';
+        document.getElementById('retryNowBtn').addEventListener('click', function() {
+          clearInterval(timer);
+          pingAndBoot();
+        });
+      }
+      showRetry(countdown);
+      var timer = setInterval(function() {
+        countdown--;
+        var el = document.getElementById('retryCountdown');
+        if (el) el.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(timer);
+          pingAndBoot();
+        }
+      }, 1000);
     });
   }
 
