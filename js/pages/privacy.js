@@ -73,6 +73,27 @@ var PrivacyModal = (function() {
             '</p>' +
           '</div>' +
 
+          // Dedicated Google account tip
+          '<div style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border:1px solid #86EFAC;border-radius:10px;padding:16px;margin-bottom:24px;">' +
+            '<h3 style="font-size:14px;font-weight:700;color:#166534;margin:0 0 10px;display:flex;align-items:center;gap:8px;">' +
+              '<span style="font-size:16px;">💡</span>' +
+              (fr ? 'Notre recommandation : compte Google dédié' : 'Our recommendation: dedicated Google account') +
+            '</h3>' +
+            '<p style="font-size:13px;color:#374151;margin:0 0 10px;line-height:1.7;">' +
+              (fr
+                ? 'Pour une sécurité maximale, nous recommandons de <strong>ne jamais connecter votre compte Google personnel</strong>. Voici la méthode la plus sûre :'
+                : 'For maximum security, we recommend <strong>never connecting your personal Google account</strong>. Here\'s the safest method:') +
+            '</p>' +
+            '<ol style="margin:0;padding:0 0 0 18px;font-size:13px;color:#374151;line-height:2.2;">' +
+              '<li>' + (fr ? 'Créez un <strong>nouveau compte Google gratuit</strong> dédié — ex : <code style="background:#fff;padding:1px 6px;border-radius:4px;">avis.monrestaurant@gmail.com</code>' : 'Create a <strong>free dedicated Google account</strong> — e.g. <code style="background:#fff;padding:1px 6px;border-radius:4px;">reviews.myrestaurant@gmail.com</code>') + '</li>' +
+              '<li>' + (fr ? 'Dans Google Business, ajoutez ce compte comme <strong>Gestionnaire</strong> de votre fiche' : 'In Google Business, add this account as a <strong>Manager</strong> of your listing') + '</li>' +
+              '<li>' + (fr ? 'Connectez <strong>ce compte dédié</strong> à SmartFeedback AI — jamais votre compte principal' : 'Connect <strong>this dedicated account</strong> to SmartFeedback AI — never your main account') + '</li>' +
+            '</ol>' +
+            '<p style="font-size:12px;color:#166534;margin:10px 0 0;font-weight:600;">' +
+              (fr ? '✓ Votre compte principal reste 100% privé et protégé.' : '✓ Your main account stays 100% private and protected.') +
+            '</p>' +
+          '</div>' +
+
           // Revoke access
           '<div style="border:1px solid #E5E7EB;border-radius:10px;padding:16px;margin-bottom:24px;">' +
             '<h3 style="font-size:14px;font-weight:700;color:#111827;margin:0 0 10px;display:flex;align-items:center;gap:8px;">' +
