@@ -257,8 +257,11 @@
         banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#4F46E5;color:#fff;' +
           'padding:10px 20px;display:flex;align-items:center;justify-content:space-between;z-index:1000;' +
           'font-family:Inter,sans-serif;font-size:13px;box-shadow:0 -2px 12px rgba(0,0,0,.15);';
+        var safeName = String(previewName)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         banner.innerHTML =
-          '<span>👁 <strong>Mode aperçu</strong> — Vous voyez le dashboard de <strong>' + previewName + '</strong></span>' +
+          '<span>👁 <strong>Mode aperçu</strong> — Vous voyez le dashboard de <strong>' + safeName + '</strong></span>' +
           '<button id="exitPreviewBtn" style="background:rgba(255,255,255,.2);border:none;color:#fff;' +
             'padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;">' +
             '← Retour admin' +
