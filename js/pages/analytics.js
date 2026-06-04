@@ -43,11 +43,15 @@
         totalReviews: 0,
         avgRating: 0,
         responseRate: 0,
+        respondedCount: 0,
         npsScore: 0,
         positiveSentiment: 0,
         ratingByMonth: [],
-        bySource: { google: 0, tripadvisor: 0, yelp: 0 },
+        bySource:             { google: 0, tripadvisor: 0, yelp: 0 },
+        sourceCounts:         { google: 0, tripadvisor: 0, yelp: 0 },
         topKeywords: [],
+        topPositiveWord: null,
+        negPending: 0,
         responseRateBySource: { google: 0, tripadvisor: 0, yelp: 0 }
       };
     }
