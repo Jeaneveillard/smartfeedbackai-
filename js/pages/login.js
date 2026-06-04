@@ -5,7 +5,7 @@ var LoginPage = (function() {
     var h = window.location.hostname;
     if (window.API_BASE) return window.API_BASE;
     if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3001';
-    return 'https://api.smartfeedback.ca';
+    return 'https://smartfeedbackai-api.onrender.com';
   }
 
   function render(container) {

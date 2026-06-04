@@ -4,7 +4,7 @@ var SignupPage = (function() {
   function getApiBase() {
     if (window.API_BASE) return window.API_BASE;
     var h = window.location.hostname;
-    return (h === 'localhost' || h === '127.0.0.1') ? 'http://localhost:3001' : 'https://api.smartfeedback.ca';
+    return (h === 'localhost' || h === '127.0.0.1') ? 'http://localhost:3001' : 'https://smartfeedbackai-api.onrender.com';
   }
 
   // Password strength: returns 0-4
@@ -214,7 +214,7 @@ var SignupPage = (function() {
         btn.textContent = lang === 'en' ? 'Creating account…' : 'Création en cours…';
         err.style.display = 'none';
 
-        fetch((window.API_BASE || (window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://api.smartfeedback.ca')) + '/auth/invite/' + inviteToken, {
+        fetch((window.API_BASE || (window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://smartfeedbackai-api.onrender.com')) + '/auth/invite/' + inviteToken, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password: pw })
