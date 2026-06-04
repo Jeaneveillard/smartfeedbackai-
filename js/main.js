@@ -219,11 +219,15 @@
       registerRoutes();
       Router.init();
     }).catch(function(err) {
+      var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+      var msg = isLocal
+        ? 'Lancez un serveur local : <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npx serve .</code>'
+        : '⏳ Le serveur se réveille (~30s). <button onclick="window.location.reload()" style="background:#4F46E5;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;margin-top:8px;">Réessayer</button>';
       document.body.innerHTML =
         '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:12px;color:#6B7280">' +
-        '<svg width="40" height="40" fill="none" stroke="#EF4444" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
-        '<strong style="color:#111827;font-size:16px">Impossible de charger les données</strong>' +
-        '<p style="font-size:13px;text-align:center">Lancez un serveur local : <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npx serve .</code></p>' +
+        '<svg width="40" height="40" fill="none" stroke="#4F46E5" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+        '<strong style="color:#111827;font-size:16px">Connexion au serveur…</strong>' +
+        '<p style="font-size:13px;text-align:center;max-width:320px">' + msg + '</p>' +
         '</div>';
       console.error(err);
     });
