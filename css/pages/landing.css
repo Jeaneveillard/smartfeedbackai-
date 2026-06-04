@@ -100,6 +100,7 @@
 }
 @media (max-width: 640px) {
   .lp-nav { padding: 0 16px; }
+  .lp-nav .lp-btn-primary { display: none; }
   .lp-hero { padding: 48px 20px 40px; }
   .lp-hero h1 { font-size: 30px; }
   .lp-features, .lp-testi, .lp-faq, .lp-cta { padding: 48px 20px; }
