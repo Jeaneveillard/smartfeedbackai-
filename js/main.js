@@ -209,10 +209,12 @@
     }
 
     if (!jwt) {
-      // Backend configuré mais pas de JWT — afficher la page de login
+      // Backend configuré mais pas de JWT — afficher la landing page
       document.body.innerHTML = '<div id="app" style="min-height:100vh;background:var(--bg,#F4F5F9)"></div>';
       document.body.style.fontFamily = "'Inter', -apple-system, sans-serif";
-      if (window.LoginPage) {
+      if (window.LandingPage) {
+        LandingPage.render(document.getElementById('app'));
+      } else if (window.LoginPage) {
         LoginPage.render(document.getElementById('app'));
       } else {
         document.getElementById('app').innerHTML = '<p style="padding:40px;text-align:center">Chargement...</p>';
