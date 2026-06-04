@@ -140,7 +140,7 @@ var LandingPage = (function() {
 
       // FOOTER
       '  <footer class="lp-footer">',
-      '    <span>© 2025 SmartFeedback AI. Tous droits réservés.</span>',
+      '    <span>© 2026 SmartFeedback AI. Tous droits réservés.</span>',
       '    <div>',
       '      <a id="lpFooterPrivacy">Confidentialité</a>',
       '      <a id="lpFooterContract">Contrat</a>',
