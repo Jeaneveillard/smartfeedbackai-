@@ -16,8 +16,15 @@ var PrivacyModal = (function() {
         '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:16px 16px 0 0;padding:24px 28px;position:sticky;top:0;">' +
           '<div style="display:flex;align-items:center;justify-content:space-between;">' +
             '<div>' +
-              '<div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;">🔒 ' + (fr ? 'Sécurité & Confidentialité' : 'Security & Privacy') + '</div>' +
-              '<div style="font-size:12px;color:rgba(255,255,255,.75);">SmartFeedback AI</div>' +
+              '<div style="display:flex;align-items:center;gap:10px;">' +
+                '<div style="width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                  '<svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>' +
+                '</div>' +
+                '<div>' +
+                  '<div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:1px;">' + (fr ? 'Sécurité & Confidentialité' : 'Security & Privacy') + '</div>' +
+                  '<div style="font-size:11px;color:rgba(255,255,255,.75);">SmartFeedback AI</div>' +
+                '</div>' +
+              '</div>' +
             '</div>' +
             '<button onclick="PrivacyModal.close()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">×</button>' +
           '</div>' +
