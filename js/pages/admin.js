@@ -374,7 +374,7 @@ var AdminPage = (function () {
         '<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px;">Identifiants du projet Google Cloud → SmartFeedback AI.</div>' +
         '<div style="background:var(--bg);border-radius:8px;padding:12px 14px;font-size:12px;font-family:monospace;color:var(--txt2);">' +
           'Client ID : 542914056011-7drpfjs105nc69ishahaim75...apps.googleusercontent.com<br>' +
-          'Callback  : http://localhost:3001/auth/google/callback' +
+          'Callback  : https://smartfeedbackai-api.onrender.com/auth/google/callback' +
         '</div>' +
         '<a href="https://console.cloud.google.com" target="_blank" class="btn btn-ghost" style="margin-top:10px;font-size:12px;">Ouvrir Google Cloud Console →</a>' +
       '</div>';
