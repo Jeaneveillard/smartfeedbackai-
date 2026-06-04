@@ -280,8 +280,26 @@
         return;
       }
       console.error(err);
-      // Auto-retry every 10s — show countdown
-      var countdown = 10;
+      // Only retry for network/fetch errors, not JS bugs
+      var isNetworkError = err instanceof TypeError && err.message && err.message.indexOf('fetch') !== -1;
+      if (!isNetworkError) {
+        // JS error — reload once cleanly to pick up latest deployed code
+        localStorage.removeItem('sfai_boot_error');
+        if (!sessionStorage.getItem('sfai_reloaded')) {
+          sessionStorage.setItem('sfai_reloaded', '1');
+          window.location.reload();
+        } else {
+          sessionStorage.removeItem('sfai_reloaded');
+          document.body.innerHTML =
+            '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:12px;color:#6B7280">' +
+            '<strong style="color:#111827;font-size:16px">Erreur inattendue</strong>' +
+            '<p style="font-size:13px;color:#6B7280;">Videz le cache (Ctrl+Shift+R) ou contactez le support.</p>' +
+            '</div>';
+        }
+        return;
+      }
+      // Network error — retry with countdown
+      var countdown = 15;
       function showRetry(n) {
         document.body.innerHTML =
           '<div id="retryScreen" style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:14px;color:#6B7280">' +
