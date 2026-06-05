@@ -976,15 +976,15 @@
         });
     }
 
-    /* Handle Stripe redirect callbacks (?checkout=success/cancel) */
-    var urlParams = new URLSearchParams(window.location.search);
-    var checkout  = urlParams.get('checkout');
-    if (checkout === 'success') {
-      if (window.Toast) Toast.show('✅ Abonnement activé — bienvenue !', 'success');
-      window.history.replaceState({}, '', window.location.pathname + window.location.hash);
-    } else if (checkout === 'cancel') {
-      if (window.Toast) Toast.show('Paiement annulé.', 'error');
-      window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+    /* Handle Stripe redirect callbacks (stored in localStorage by main.js) */
+    var checkout = localStorage.getItem('sfai_checkout');
+    if (checkout) {
+      localStorage.removeItem('sfai_checkout');
+      if (checkout === 'success') {
+        if (window.Toast) Toast.show('✅ Abonnement activé — bienvenue !', 'success');
+      } else if (checkout === 'cancel') {
+        if (window.Toast) Toast.show('Paiement annulé.', 'error');
+      }
     }
   }
 

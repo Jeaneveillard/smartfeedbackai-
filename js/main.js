@@ -173,6 +173,14 @@
       window.history.replaceState({}, '', window.location.pathname + window.location.hash);
     }
 
+    // Handle Stripe checkout return (?checkout=success/cancel)
+    var checkoutResult = urlParams.get('checkout');
+    if (checkoutResult) {
+      localStorage.setItem('sfai_checkout', checkoutResult);
+      window.history.replaceState({}, '', window.location.pathname);
+      window.location.hash = '#/settings';
+    }
+
     var jwt = localStorage.getItem('sfai_jwt');
 
     // Demo mode : explicitement activé via localStorage OU protocol file://
