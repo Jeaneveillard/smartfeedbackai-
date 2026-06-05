@@ -456,7 +456,10 @@
   }
 
   /* ── Tab: Abonnement ─────────────────────────── */
-  function renderSubscription() {
+  /* billing status cached after first fetch */
+  var _billingStatus = null;
+
+  function renderSubscription(billingStatus) {
     var s        = getSettings();
     var biz      = s.business || {};
     var billing  = s.billing  || {};
@@ -466,15 +469,12 @@
     var taxInfo  = getTaxInfo(country, sp);
     var taxRate  = taxInfo.tax || 0;
     var taxLabel = taxInfo.taxLabel || '';
+    var isEn     = I18n.getLang() === 'en';
 
     var rate     = FX[currency] || 1;
     var subtotal = BASE_PRICE_CAD * rate;
     var taxAmt   = subtotal * (taxRate / 100);
     var total    = subtotal + taxAmt;
-
-    var subtotalBiz = BASE_BIZ_CAD * rate;
-    var taxBiz      = subtotalBiz * (taxRate / 100);
-    var totalBiz    = subtotalBiz + taxBiz;
 
     var currencyOpts = Object.keys(FX).map(function(c) {
       return '<option value="' + c + '"' + (currency === c ? ' selected' : '') + '>' + c + '</option>';
@@ -490,20 +490,78 @@
     var altCurrency = currency === 'CAD' ? 'USD' : 'CAD';
     var altRate     = FX[altCurrency] || 1;
     var altTotal    = (BASE_PRICE_CAD * altRate) * (1 + taxRate / 100);
-    var approxNote  = I18n.getLang() === 'en' ? 'Approximate exchange rate' : 'Taux de change approximatif';
+    var approxNote  = isEn ? 'Approximate exchange rate' : 'Taux de change approximatif';
     var altNote     = '<div style="font-size:11.5px;color:var(--txt3);margin-top:8px;">≈ ' + fmt(altTotal, altCurrency) + ' ' + esc(t('per_month')) + ' · ' + esc(approxNote) + '</div>';
 
     var features = [
-      I18n.getLang() === 'en' ? 'Unlimited AI responses'   : 'Réponses IA illimitées',
-      I18n.getLang() === 'en' ? '3 connected platforms'    : '3 plateformes connectées',
-      I18n.getLang() === 'en' ? 'Advanced analytics'       : 'Analytique avancée',
+      isEn ? 'Unlimited AI responses'   : 'Réponses IA illimitées',
+      isEn ? '3 connected platforms'    : '3 plateformes connectées',
+      isEn ? 'Advanced analytics'       : 'Analytique avancée',
       'Export CSV'
     ];
     var featureList = features.map(function(f) {
       return '<li style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-faint);font-size:13.5px;"><span style="color:var(--green);font-size:15px;">✓</span>' + esc(f) + '</li>';
     }).join('');
 
-    var indicativeNote = I18n.getLang() === 'en' ? 'Approximate exchange rate · Amounts are indicative' : 'Taux de change approximatif · Les montants sont indicatifs';
+    var indicativeNote = isEn ? 'Approximate exchange rate · Amounts are indicative' : 'Taux de change approximatif · Les montants sont indicatifs';
+
+    /* ── Stripe subscription status block ── */
+    var subStatus  = billingStatus ? billingStatus.subscriptionStatus : null;
+    var isActive   = subStatus === 'active' || subStatus === 'trialing';
+    var isPastDue  = subStatus === 'past_due';
+    var statusBadgeColor = isActive ? 'var(--green)' : isPastDue ? 'var(--orange)' : 'var(--txt3)';
+    var statusLabel = isActive
+      ? (isEn ? 'ACTIVE' : 'ACTIF')
+      : isPastDue
+        ? (isEn ? 'PAYMENT OVERDUE' : 'PAIEMENT EN RETARD')
+        : subStatus === 'canceled'
+          ? (isEn ? 'CANCELED' : 'ANNULÉ')
+          : (isEn ? 'INACTIVE' : 'INACTIF');
+
+    var planCard;
+    if (isActive || isPastDue) {
+      /* Has subscription — show manage button */
+      planCard =
+        '<div style="background:var(--primary-light);border:1.5px solid var(--primary-mid);border-radius:var(--r);padding:20px 22px;margin-bottom:24px;">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">' +
+            '<div style="display:flex;align-items:center;gap:10px;">' +
+              '<span style="background:' + statusBadgeColor + ';color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;">STARTER · ' + statusLabel + '</span>' +
+            '</div>' +
+            '<button class="btn btn-ghost" id="manageSubBtn">' + esc(isEn ? 'Manage subscription' : 'Gérer l\'abonnement') + '</button>' +
+          '</div>' +
+          '<div style="border-top:1px solid var(--primary-mid);padding-top:14px;">' +
+            '<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--txt2);padding:6px 0;">' +
+              '<span>' + esc(t('subtotal')) + '</span><span>' + fmt(subtotal, currency) + ' ' + esc(t('per_month')) + '</span>' +
+            '</div>' +
+            taxRow +
+            '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--txt1);padding:8px 0;border-top:1.5px solid var(--primary-mid);margin-top:4px;">' +
+              '<span>' + esc(t('total')) + '</span><span>' + fmt(total, currency) + ' ' + esc(t('per_month')) + '</span>' +
+            '</div>' +
+            altNote +
+          '</div>' +
+        '</div>';
+    } else {
+      /* No active subscription — show subscribe CTA */
+      planCard =
+        '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:var(--r);padding:22px 24px;color:#fff;margin-bottom:24px;">' +
+          '<div style="font-size:15px;font-weight:700;margin-bottom:6px;">' +
+            (isEn ? 'Subscribe to SmartFeedback AI' : 'S\'abonner à SmartFeedback AI') +
+          '</div>' +
+          '<div style="font-size:13px;opacity:.85;margin-bottom:18px;">' +
+            (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(total, currency) + ' ' + esc(t('per_month')) +
+            (taxRate > 0 ? ', ' + (isEn ? 'taxes included' : 'taxes incluses') : '') +
+          '</div>' +
+          '<button class="btn" id="subscribeBtn" style="background:#fff;color:#4F46E5;font-weight:700;">' +
+            (isEn ? '💳 Subscribe now' : '💳 S\'abonner maintenant') +
+          '</button>' +
+        '</div>';
+    }
+
+    /* Loading spinner when status not yet fetched */
+    if (billingStatus === undefined) {
+      planCard = '<div style="padding:24px;text-align:center;color:var(--txt3);font-size:13px;">' +
+        (isEn ? 'Loading subscription status…' : 'Chargement du statut…') + '</div>';
+    }
 
     return (
       '<div class="settings-section active" id="tab-subscription">' +
@@ -516,45 +574,12 @@
           '<span style="font-size:11.5px;color:var(--txt3);">' + esc(indicativeNote) + '</span>' +
         '</div>' +
 
-        /* Current plan card */
-        '<div style="background:var(--primary-light);border:1.5px solid var(--primary-mid);border-radius:var(--r);padding:20px 22px;margin-bottom:24px;">' +
-          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">' +
-            '<div>' +
-              '<span style="background:var(--primary);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;">PLAN PRO · ACTUEL</span>' +
-            '</div>' +
-            '<button class="btn btn-ghost">' + esc(t('manage_sub')) + '</button>' +
-          '</div>' +
-          '<div style="border-top:1px solid var(--primary-mid);padding-top:14px;">' +
-            '<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--txt2);padding:6px 0;">' +
-              '<span>' + esc(t('subtotal')) + '</span><span>' + fmt(subtotal, currency) + ' ' + esc(t('per_month')) + '</span>' +
-            '</div>' +
-            taxRow +
-            '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--txt1);padding:8px 0;border-top:1.5px solid var(--primary-mid);margin-top:4px;">' +
-              '<span>' + esc(t('total')) + '</span><span>' + fmt(total, currency) + ' ' + esc(t('per_month')) + '</span>' +
-            '</div>' +
-            altNote +
-          '</div>' +
-        '</div>' +
+        planCard +
 
         /* Features */
         '<div style="margin-bottom:28px;">' +
           '<div style="font-size:13px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;">' + esc(t('features_included').toUpperCase()) + '</div>' +
           '<ul style="list-style:none;padding:0;margin:0;">' + featureList + '</ul>' +
-        '</div>' +
-
-        /* Upgrade CTA */
-        '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:var(--r);padding:22px 24px;color:#fff;">' +
-          '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">' +
-            '<div>' +
-              '<div style="font-size:15px;font-weight:700;margin-bottom:4px;">' + esc(t('upgrade_title')) + '</div>' +
-              '<div style="font-size:13px;opacity:.85;">' + esc(t('upgrade_sub')) + '</div>' +
-            '</div>' +
-            '<div style="text-align:right;">' +
-              '<div style="font-size:20px;font-weight:800;">' + fmt(totalBiz, currency) + '</div>' +
-              '<div style="font-size:11px;opacity:.75;">' + esc(t('per_month')) + ', taxes incluses</div>' +
-            '</div>' +
-          '</div>' +
-          '<button class="btn" style="background:#fff;color:#4F46E5;font-weight:700;margin-top:16px;">' + esc(t('upgrade_cta')) + '</button>' +
         '</div>' +
       '</div>'
     );
@@ -900,7 +925,10 @@
     if (currentTab === 'business')          panelHtml = renderBusiness();
     else if (currentTab === 'integrations') panelHtml = renderIntegrations();
     else if (currentTab === 'ai')           panelHtml = renderAI();
-    else                                    panelHtml = renderSubscription();
+    else {
+      /* Subscription tab: render with loading state, then fetch real status */
+      panelHtml = renderSubscription(undefined); // undefined = loading
+    }
 
     container.innerHTML = [
       '<div class="page-header">',
@@ -926,6 +954,74 @@
 
     /* Attach event listeners */
     bindEvents(container);
+
+    /* If subscription tab: fetch real billing status then re-render panel */
+    if (currentTab === 'subscription' && window.API) {
+      API.get('/api/billing/status')
+        .then(function(status) {
+          _billingStatus = status;
+          var panel = container.querySelector('.settings-panel');
+          if (panel) {
+            panel.innerHTML = renderSubscription(_billingStatus);
+            bindBillingEvents(container);
+          }
+        })
+        .catch(function() {
+          _billingStatus = null;
+          var panel = container.querySelector('.settings-panel');
+          if (panel) {
+            panel.innerHTML = renderSubscription(null);
+            bindBillingEvents(container);
+          }
+        });
+    }
+
+    /* Handle Stripe redirect callbacks (?checkout=success/cancel) */
+    var urlParams = new URLSearchParams(window.location.search);
+    var checkout  = urlParams.get('checkout');
+    if (checkout === 'success') {
+      if (window.Toast) Toast.show('✅ Abonnement activé — bienvenue !', 'success');
+      window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+    } else if (checkout === 'cancel') {
+      if (window.Toast) Toast.show('Paiement annulé.', 'error');
+      window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+    }
+  }
+
+  function bindBillingEvents(container) {
+    var subscribeBtn = document.getElementById('subscribeBtn');
+    if (subscribeBtn) {
+      subscribeBtn.addEventListener('click', function() {
+        subscribeBtn.disabled = true;
+        subscribeBtn.textContent = '…';
+        API.post('/api/billing/checkout', {})
+          .then(function(data) {
+            if (data && data.url) window.location.href = data.url;
+            else throw new Error('No URL');
+          })
+          .catch(function(err) {
+            subscribeBtn.disabled = false;
+            subscribeBtn.textContent = I18n.getLang() === 'en' ? '💳 Subscribe now' : '💳 S\'abonner maintenant';
+            if (window.Toast) Toast.show(err.message || 'Erreur Stripe', 'error');
+          });
+      });
+    }
+
+    var manageBtn = document.getElementById('manageSubBtn');
+    if (manageBtn) {
+      manageBtn.addEventListener('click', function() {
+        manageBtn.disabled = true;
+        API.get('/api/billing/portal')
+          .then(function(data) {
+            if (data && data.url) window.location.href = data.url;
+            else throw new Error('No URL');
+          })
+          .catch(function(err) {
+            manageBtn.disabled = false;
+            if (window.Toast) Toast.show(err.message || 'Erreur portail', 'error');
+          });
+      });
+    }
   }
 
   window.SettingsPage = { render: render };
