@@ -2,3 +2,5 @@ node_modules/
 .superpowers/
 .claude/
 test-*.png
+.cf-token
+deploy.ps1
