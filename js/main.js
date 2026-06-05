@@ -158,8 +158,8 @@
     // Invitation link — show signup page
     var inviteToken = urlParams.get('invite');
     if (inviteToken) {
-      document.body.innerHTML = '<div id="app" style="min-height:100vh;background:var(--bg,#F4F5F9)"></div>';
-      document.body.style.fontFamily = "'Inter', -apple-system, sans-serif";
+      document.body.innerHTML = '<div id="app" style="min-height:100vh;background:var(--bg,#F4F5F9);padding:0"></div>';
+      document.body.style.cssText = "font-family:'Inter',-apple-system,sans-serif;display:block;overflow-y:auto;";
       if (window.SignupPage) {
         SignupPage.render(document.getElementById('app'), inviteToken);
       }
@@ -210,8 +210,8 @@
 
     if (!jwt) {
       // Backend configuré mais pas de JWT — afficher la landing page
-      document.body.innerHTML = '<div id="app" style="min-height:100vh;background:var(--bg,#F4F5F9)"></div>';
-      document.body.style.fontFamily = "'Inter', -apple-system, sans-serif";
+      document.body.innerHTML = '<div id="app" style="min-height:100vh;background:var(--bg,#F4F5F9);padding:0"></div>';
+      document.body.style.cssText = "font-family:'Inter',-apple-system,sans-serif;display:block;overflow-y:auto;";
       if (window.LandingPage) {
         LandingPage.render(document.getElementById('app'));
       } else if (window.LoginPage) {
