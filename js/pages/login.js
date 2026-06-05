@@ -88,7 +88,13 @@ var LoginPage = (function() {
       '      ' + t('login_google'),
       '    </a>',
 
-      '    <p style="font-size:11px;color:#9CA3AF;text-align:center;margin:16px 0 0;">' + t('login_note') + '</p>',
+      '    <p style="font-size:12px;text-align:center;margin:16px 0 0;color:#6B7280;">',
+      '      ' + (lang === 'en' ? 'New here?' : 'Nouveau client ?') + ' ',
+      '      <a href="mailto:jeaneveillard@gmail.com" style="color:#4F46E5;text-decoration:none;font-weight:600;">',
+      '        ' + (lang === 'en' ? 'Request access →' : 'Demandez un accès →') +
+      '      </a>',
+      '    </p>',
+      '    <p style="font-size:11px;color:#9CA3AF;text-align:center;margin:10px 0 0;">' + t('login_note') + '</p>',
       '    <p style="font-size:11px;text-align:center;margin:10px 0 0;">',
       '      <a href="#" onclick="event.preventDefault();PrivacyModal.show();" style="color:#4F46E5;text-decoration:none;">🔒 ' + (lang === 'en' ? 'Security & Privacy' : 'Sécurité & Confidentialité') + '</a>',
       '      <span style="color:#D1D5DB;margin:0 6px;">·</span>',

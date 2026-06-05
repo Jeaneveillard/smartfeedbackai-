@@ -154,11 +154,11 @@ var LandingPage = (function() {
     // CTA listeners
     function on(id, fn) { var el = document.getElementById(id); if (el) el.addEventListener('click', fn); }
     on('lpNavLogin',   function() { showAuth(container, 'login'); });
-    on('lpNavSignup',  function() { showAuth(container, 'signup'); });
+    on('lpNavSignup',  function() { showAuth(container, 'login'); });
     on('lpHeroLogin',  function() { showAuth(container, 'login'); });
-    on('lpHeroSignup', function() { showAuth(container, 'signup'); });
+    on('lpHeroSignup', function() { showAuth(container, 'login'); });
     on('lpCtaLogin',   function() { showAuth(container, 'login'); });
-    on('lpCtaSignup',  function() { showAuth(container, 'signup'); });
+    on('lpCtaSignup',  function() { showAuth(container, 'login'); });
     on('lpFooterPrivacy', function() { if (window.PrivacyModal) PrivacyModal.show(); });
     on('lpFooterContract', function() { if (window.ContractModal) ContractModal.show(); });
   }
