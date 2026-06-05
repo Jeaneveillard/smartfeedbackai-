@@ -121,7 +121,7 @@ var PrivacyModal = (function() {
             '<ul style="margin:0;padding:0 0 0 16px;font-size:13px;color:#374151;line-height:2;">' +
               '<li>' + (fr ? 'Serveurs : Render.com (États-Unis)' : 'Servers: Render.com (United States)') + '</li>' +
               '<li>' + (fr ? 'Base de données : Neon PostgreSQL (États-Unis)' : 'Database: Neon PostgreSQL (United States)') + '</li>' +
-              '<li>' + (fr ? 'Frontend : Netlify (CDN mondial)' : 'Frontend: Netlify (Global CDN)') + '</li>' +
+              '<li>' + (fr ? 'Frontend : Cloudflare Workers (CDN mondial)' : 'Frontend: Cloudflare Workers (Global CDN)') + '</li>' +
               '<li>' + (fr ? 'Aucune vente de données à des tiers' : 'No data sold to third parties') + '</li>' +
             '</ul>' +
           '</div>' +
