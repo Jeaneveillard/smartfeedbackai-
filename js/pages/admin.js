@@ -67,6 +67,7 @@ var AdminPage = (function () {
               : '<button class="btn btn-soft admin-activate" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" style="font-size:11.5px;padding:4px 10px;">Activer</button>') +
             '<button class="btn btn-ghost admin-reset-pw" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" data-username="' + esc(t.username || t.email) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;">🔑</button>' +
             '<button class="btn btn-soft admin-preview" data-id="' + esc(t.id) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;color:var(--primary);">👁 Voir</button>' +
+            '<button class="btn btn-soft admin-profile" data-id="' + esc(t.id) + '" data-tenant=\'' + JSON.stringify({name:t.name,email:t.email,sector:t.sector||'',phone:t.phone||'',address:t.address||'',city:t.city||'',website:t.website||'',plan:t.plan||'',created_at:t.created_at}).replace(/'/g,'&#39;') + '\' style="font-size:11.5px;padding:4px 10px;">📋 Profil</button>' +
           '</div>' +
         '</td>' +
       '</tr>';
@@ -339,6 +340,174 @@ var AdminPage = (function () {
           });
       });
     });
+
+    /* Profile modal */
+    container.querySelectorAll('.admin-profile').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var t;
+        try { t = JSON.parse(el.getAttribute('data-tenant')); } catch(e) { return; }
+        var modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;display:flex;align-items:center;justify-content:center;';
+        modal.innerHTML =
+          '<div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);">' +
+            '<div style="font-size:16px;font-weight:800;margin-bottom:4px;">📋 ' + esc(t.name) + '</div>' +
+            '<div style="font-size:12px;color:#6B7280;margin-bottom:20px;">Profil complet — visible admin uniquement</div>' +
+            '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
+              '<tr><td style="padding:7px 0;color:#6B7280;width:110px;">Secteur</td><td style="padding:7px 0;font-weight:600;">' + esc(t.sector || '—') + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Email</td><td style="padding:7px 0;">' + esc(t.email) + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Téléphone</td><td style="padding:7px 0;">' + esc(t.phone || '—') + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Adresse</td><td style="padding:7px 0;">' + esc(t.address || '—') + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Ville</td><td style="padding:7px 0;">' + esc(t.city || '—') + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Site web</td><td style="padding:7px 0;">' + esc(t.website || '—') + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Plan</td><td style="padding:7px 0;">' + esc(t.plan || '—') + '</td></tr>' +
+              '<tr><td style="padding:7px 0;color:#6B7280;">Créé le</td><td style="padding:7px 0;">' + fmtDate(t.created_at) + '</td></tr>' +
+            '</table>' +
+            '<button id="profileClose" class="btn btn-primary" style="width:100%;margin-top:20px;">Fermer</button>' +
+          '</div>';
+        document.body.appendChild(modal);
+        modal.querySelector('#profileClose').addEventListener('click', function() { document.body.removeChild(modal); });
+        modal.addEventListener('click', function(e) { if (e.target === modal) document.body.removeChild(modal); });
+      });
+    });
+  }
+
+  /* ─── Render requests tab ─────────────────────────────────────────────── */
+  function renderRequests(container, requests) {
+    var pending = requests.filter(function(r) { return r.status === 'pending'; }).length;
+
+    var rows = requests.map(function(r) {
+      var statusBadge = r.status === 'pending'
+        ? '<span style="background:#FEF3C7;color:#D97706;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;">En attente</span>'
+        : r.status === 'approved'
+          ? '<span style="background:#ECFDF5;color:#059669;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;">Approuvée</span>'
+          : '<span style="background:#FEF2F2;color:#B91C1C;font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;">Rejetée</span>';
+
+      var actions = r.status === 'pending'
+        ? '<button class="btn btn-primary ob-approve" data-id="' + esc(r.id) + '" data-name="' + esc(r.business_name) + '" data-email="' + esc(r.email) + '" style="font-size:11.5px;padding:4px 12px;">Approuver</button>' +
+          '<button class="btn btn-danger ob-reject" data-id="' + esc(r.id) + '" style="font-size:11.5px;padding:4px 10px;margin-left:6px;">Rejeter</button>'
+        : '—';
+
+      return '<tr style="border-bottom:1px solid var(--border-faint);">' +
+        '<td style="padding:12px 16px;">' +
+          '<div style="font-weight:600;font-size:13.5px;">' + esc(r.business_name) + '</div>' +
+          '<div style="font-size:12px;color:var(--txt3);margin-top:2px;">' + esc(r.sector) + '</div>' +
+        '</td>' +
+        '<td style="padding:12px 16px;font-size:12px;color:var(--txt2);">' + esc(r.city) + '</td>' +
+        '<td style="padding:12px 16px;font-size:12px;">' +
+          '<div style="font-weight:600;">' + esc(r.contact_name) + '</div>' +
+          '<div style="color:var(--txt3);">' + esc(r.email) + '</div>' +
+        '</td>' +
+        '<td style="padding:12px 16px;font-size:12px;color:var(--txt3);">' + fmtDate(r.created_at) + '</td>' +
+        '<td style="padding:12px 16px;">' + statusBadge + '</td>' +
+        '<td style="padding:12px 16px;">' + actions + '</td>' +
+      '</tr>';
+    }).join('');
+
+    container.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">' +
+        '<div>' +
+          '<h2 style="font-size:16px;font-weight:800;margin:0 0 4px;">Demandes d\'accès (' + requests.length + ')</h2>' +
+          '<p style="font-size:13px;color:var(--txt2);margin:0;">' + pending + ' en attente de traitement</p>' +
+        '</div>' +
+      '</div>' +
+      '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">' +
+        (requests.length === 0
+          ? '<div style="padding:40px;text-align:center;color:var(--txt3);">Aucune demande reçue.</div>'
+          : '<table style="width:100%;border-collapse:collapse;">' +
+              '<thead><tr style="background:var(--bg);">' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Établissement</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Ville</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Contact</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Date</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Statut</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Actions</th>' +
+              '</tr></thead>' +
+              '<tbody>' + rows + '</tbody>' +
+            '</table>') +
+      '</div>';
+
+    /* Approve button */
+    container.querySelectorAll('.ob-approve').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id   = btn.getAttribute('data-id');
+        var name = btn.getAttribute('data-name');
+        var suggestedUsername = name.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20);
+
+        var modal = document.createElement('div');
+        modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;display:flex;align-items:center;justify-content:center;';
+        modal.innerHTML =
+          '<div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);">' +
+            '<div style="font-size:16px;font-weight:800;margin-bottom:6px;">✅ Approuver la demande</div>' +
+            '<div style="font-size:13px;color:#6B7280;margin-bottom:20px;">' + esc(name) + '</div>' +
+            '<label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:5px;">USERNAME</label>' +
+            '<input id="approveUsername" type="text" value="' + esc(suggestedUsername) + '" class="form-input" style="margin-bottom:14px;">' +
+            '<label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:5px;">PLAN</label>' +
+            '<select id="approvePlan" class="form-input" style="margin-bottom:20px;">' +
+              '<option value="beta">Bêta</option>' +
+              '<option value="pro">Pro</option>' +
+              '<option value="business">Business</option>' +
+            '</select>' +
+            '<div id="approveResult" style="display:none;margin-bottom:14px;"></div>' +
+            '<div style="display:flex;gap:10px;">' +
+              '<button id="approveConfirm" class="btn btn-primary" style="flex:1;">Créer le compte &amp; envoyer l\'invitation</button>' +
+              '<button id="approveCancel" class="btn btn-ghost">Annuler</button>' +
+            '</div>' +
+          '</div>';
+        document.body.appendChild(modal);
+
+        modal.querySelector('#approveCancel').addEventListener('click', function() { document.body.removeChild(modal); });
+        modal.addEventListener('click', function(e) { if (e.target === modal) document.body.removeChild(modal); });
+
+        modal.querySelector('#approveConfirm').addEventListener('click', function() {
+          var username   = modal.querySelector('#approveUsername').value.trim();
+          var plan       = modal.querySelector('#approvePlan').value;
+          var resEl      = modal.querySelector('#approveResult');
+          var confirmBtn = modal.querySelector('#approveConfirm');
+          if (!username) { Toast.show('Username requis', 'error'); return; }
+
+          confirmBtn.disabled = true; confirmBtn.textContent = 'Création…';
+
+          API.post('/admin/onboarding-requests/' + id + '/approve', { username: username, plan: plan })
+            .then(function(data) {
+              var inviteUrl = data.invite ? data.invite.url : '';
+              var emailSent = data.invite && data.invite.emailSent;
+              resEl.style.display = '';
+              resEl.innerHTML =
+                '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:8px;padding:14px;">' +
+                  '<div style="font-size:13px;font-weight:700;color:#065F46;margin-bottom:8px;">✅ Compte créé !</div>' +
+                  (emailSent
+                    ? '<div style="font-size:12px;color:#065F46;margin-bottom:8px;">📧 Invitation envoyée à ' + esc(data.tenant ? data.tenant.email : '') + '</div>'
+                    : '<div style="font-size:12px;color:#92400E;margin-bottom:8px;">⚠️ Email non envoyé. Partagez le lien :</div>') +
+                  '<input type="text" value="' + esc(inviteUrl) + '" readonly style="width:100%;padding:7px 10px;border:1px solid #D1D5DB;border-radius:6px;font-size:11px;font-family:monospace;box-sizing:border-box;">' +
+                '</div>';
+              confirmBtn.textContent = 'Fermer';
+              confirmBtn.disabled = false;
+              confirmBtn.onclick = function() {
+                document.body.removeChild(modal);
+                loadTab(container);
+              };
+            })
+            .catch(function(err) {
+              Toast.show(err.message || 'Erreur', 'error');
+              confirmBtn.disabled = false; confirmBtn.textContent = 'Créer le compte & envoyer l\'invitation';
+            });
+        });
+      });
+    });
+
+    /* Reject button */
+    container.querySelectorAll('.ob-reject').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id    = btn.getAttribute('data-id');
+        var notes = window.prompt('Note de rejet (optionnel) :') || '';
+        API.post('/admin/onboarding-requests/' + id + '/reject', { notes: notes })
+          .then(function() {
+            Toast.show('Demande rejetée', 'info');
+            loadTab(container);
+          })
+          .catch(function() { Toast.show('Erreur', 'error'); });
+      });
+    });
   }
 
   /* ─── Render config tab ───────────────────────────────────────────────── */
@@ -413,31 +582,48 @@ var AdminPage = (function () {
         '<h1 class="page-title">Administration</h1>' +
         '<p class="page-sub">Gestion des clients et de la configuration</p>' +
       '</div>' +
-      '<div style="display:flex;gap:3px;margin-bottom:20px;">' +
-        '<div class="f-tab' + (currentTab === 'clients' ? ' active' : '') + '" data-tab="clients" style="cursor:pointer;">👥 Clients</div>' +
-        '<div class="f-tab' + (currentTab === 'config' ? ' active' : '') + '" data-tab="config" style="cursor:pointer;">⚙️ Configuration</div>' +
-      '</div>' +
+      '<div style="display:flex;gap:3px;margin-bottom:20px;" id="adminTabBar"></div>' +
       '<div id="adminTabContent"></div>';
 
-    /* Tab switching */
-    container.querySelectorAll('.f-tab[data-tab]').forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        currentTab = tab.getAttribute('data-tab');
-        container.querySelectorAll('.f-tab[data-tab]').forEach(function (t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-        loadTab(container.querySelector('#adminTabContent'));
+    function buildTabBar(pendingCount) {
+      var badge = pendingCount > 0
+        ? ' <span style="background:#EF4444;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:4px;">' + pendingCount + '</span>'
+        : '';
+      container.querySelector('#adminTabBar').innerHTML =
+        '<div class="f-tab' + (currentTab === 'clients' ? ' active' : '') + '" data-tab="clients" style="cursor:pointer;">👥 Clients</div>' +
+        '<div class="f-tab' + (currentTab === 'requests' ? ' active' : '') + '" data-tab="requests" style="cursor:pointer;">📋 Demandes' + badge + '</div>' +
+        '<div class="f-tab' + (currentTab === 'config' ? ' active' : '') + '" data-tab="config" style="cursor:pointer;">⚙️ Configuration</div>';
+
+      container.querySelectorAll('.f-tab[data-tab]').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          currentTab = tab.getAttribute('data-tab');
+          container.querySelectorAll('.f-tab[data-tab]').forEach(function(t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          loadTab(container.querySelector('#adminTabContent'));
+        });
       });
-    });
+    }
 
     loadTab(container.querySelector('#adminTabContent'));
+
+    API.get('/admin/onboarding-requests')
+      .then(function(requests) {
+        var pending = requests.filter(function(r) { return r.status === 'pending'; }).length;
+        buildTabBar(pending);
+      })
+      .catch(function() { buildTabBar(0); });
   }
 
   function loadTab(tabContent) {
+    tabContent.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txt3);">Chargement…</div>';
     if (currentTab === 'clients') {
-      tabContent.innerHTML = '<div style="padding:20px;text-align:center;color:var(--txt3);">Chargement…</div>';
       API.get('/admin/tenants')
-        .then(function (tenants) { renderClients(tabContent, tenants); })
-        .catch(function () { tabContent.innerHTML = '<p style="color:var(--red);padding:20px;">Erreur de chargement.</p>'; });
+        .then(function(tenants) { renderClients(tabContent, tenants); })
+        .catch(function() { tabContent.innerHTML = '<p style="color:var(--red);padding:20px;">Erreur de chargement.</p>'; });
+    } else if (currentTab === 'requests') {
+      API.get('/admin/onboarding-requests')
+        .then(function(requests) { renderRequests(tabContent, requests); })
+        .catch(function() { tabContent.innerHTML = '<p style="color:var(--red);padding:20px;">Erreur de chargement.</p>'; });
     } else {
       renderConfig(tabContent);
     }
