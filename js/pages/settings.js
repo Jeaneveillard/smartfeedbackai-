@@ -541,20 +541,40 @@
           '</div>' +
         '</div>';
     } else {
-      /* No active subscription — show subscribe CTA */
-      planCard =
-        '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:var(--r);padding:22px 24px;color:#fff;margin-bottom:24px;">' +
-          '<div style="font-size:15px;font-weight:700;margin-bottom:6px;">' +
-            (isEn ? 'Subscribe to SmartFeedback AI' : 'S\'abonner à SmartFeedback AI') +
-          '</div>' +
-          '<div style="font-size:13px;opacity:.85;margin-bottom:18px;">' +
-            (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(total, currency) + ' ' + esc(t('per_month')) +
-            (taxRate > 0 ? ', ' + (isEn ? 'taxes included' : 'taxes incluses') : '') +
-          '</div>' +
-          '<button class="btn" id="subscribeBtn" style="background:#fff;color:#4F46E5;font-weight:700;">' +
-            (isEn ? '💳 Subscribe now' : '💳 S\'abonner maintenant') +
-          '</button>' +
-        '</div>';
+      var me   = window.Store ? Store.get('me') : null;
+      var plan = me && me.plan;
+
+      if (plan === 'beta') {
+        /* Beta plan — show trial info, no payment CTA */
+        var subEnd  = me && me.subscription_end;
+        var daysLeft = subEnd ? Math.ceil((new Date(subEnd) - new Date()) / 86400000) : null;
+        var betaMsg  = daysLeft !== null
+          ? (isEn ? daysLeft + ' days remaining in your beta period' : daysLeft + ' jours restants dans votre période bêta')
+          : (isEn ? 'Beta access — contact your administrator for details' : 'Accès bêta — contactez votre administrateur pour les détails');
+        planCard =
+          '<div style="background:linear-gradient(135deg,#059669,#10B981);border-radius:var(--r);padding:22px 24px;color:#fff;margin-bottom:24px;">' +
+            '<div style="font-size:15px;font-weight:700;margin-bottom:6px;">' +
+              (isEn ? '🎉 Beta access — free trial' : '🎉 Accès bêta — essai gratuit') +
+            '</div>' +
+            '<div style="font-size:13px;opacity:.9;margin-bottom:4px;">' + esc(betaMsg) + '</div>' +
+            (subEnd ? '<div style="font-size:12px;opacity:.75;">' + (isEn ? 'Expires ' : 'Expire le ') + subEnd + '</div>' : '') +
+          '</div>';
+      } else {
+        /* No active subscription — show subscribe CTA */
+        planCard =
+          '<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:var(--r);padding:22px 24px;color:#fff;margin-bottom:24px;">' +
+            '<div style="font-size:15px;font-weight:700;margin-bottom:6px;">' +
+              (isEn ? 'Subscribe to SmartFeedback AI' : 'S\'abonner à SmartFeedback AI') +
+            '</div>' +
+            '<div style="font-size:13px;opacity:.85;margin-bottom:18px;">' +
+              (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(total, currency) + ' ' + esc(t('per_month')) +
+              (taxRate > 0 ? ', ' + (isEn ? 'taxes included' : 'taxes incluses') : '') +
+            '</div>' +
+            '<button class="btn" id="subscribeBtn" style="background:#fff;color:#4F46E5;font-weight:700;">' +
+              (isEn ? '💳 Subscribe now' : '💳 S\'abonner maintenant') +
+            '</button>' +
+          '</div>';
+      }
     }
 
     /* Loading spinner when status not yet fetched */
