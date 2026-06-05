@@ -62,7 +62,7 @@ var LoginPage = (function() {
       '      <div id="loginError" style="display:none;background:#FEF2F2;border:1px solid #FECACA;',
       '           border-radius:7px;padding:9px 12px;font-size:13px;color:#B91C1C;margin-bottom:12px;"></div>',
       '      <label style="display:flex;align-items:flex-start;gap:9px;margin-bottom:14px;cursor:pointer;">',
-      '        <input type="checkbox" id="loginConsent" style="margin-top:2px;width:15px;height:15px;flex-shrink:0;accent-color:#4F46E5;cursor:pointer;">',
+      '        <input type="checkbox" id="loginConsent"' + (localStorage.getItem('sfai_consent') ? ' checked' : '') + ' style="margin-top:2px;width:15px;height:15px;flex-shrink:0;accent-color:#4F46E5;cursor:pointer;">',
       '        <span style="font-size:12px;color:#374151;line-height:1.5;">',
       '          ' + (lang === 'en'
             ? 'I have read and accept the <a href="#" onclick="event.preventDefault();PrivacyModal.show();" style="color:#4F46E5;text-decoration:none;font-weight:600;">Privacy Policy</a> and the <a href="#" onclick="event.preventDefault();ContractModal.show();" style="color:#4F46E5;text-decoration:none;font-weight:600;">Terms of Service</a>.'
@@ -196,6 +196,7 @@ var LoginPage = (function() {
             return;
           }
           localStorage.setItem('sfai_jwt', r.data.token);
+          localStorage.setItem('sfai_consent', '1');
           window.location.reload();
         })
         .catch(function(err) {
