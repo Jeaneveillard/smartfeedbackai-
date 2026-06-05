@@ -332,6 +332,7 @@ var AdminPage = (function () {
             localStorage.setItem('sfai_jwt_admin', localStorage.getItem('sfai_jwt'));
             localStorage.setItem('sfai_preview_name', name);
             localStorage.setItem('sfai_jwt', data.token);
+            window.location.hash = '#/';
             window.location.reload();
           })
           .catch(function() {
