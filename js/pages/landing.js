@@ -2,13 +2,11 @@ var LandingPage = (function() {
   'use strict';
 
   function showAuth(container, page) {
-    // page === 'login' | 'signup'
-    if (page === 'signup' && window.SignupPage) {
-      SignupPage.render(container);
+    if (page === 'onboarding' && window.OnboardingPage) {
+      OnboardingPage.render(container);
     } else if (window.LoginPage) {
       LoginPage.render(container);
     }
-    // Bouton retour flottant
     var back = document.createElement('button');
     back.className = 'lp-back';
     back.innerHTML = '← Retour';
@@ -154,11 +152,11 @@ var LandingPage = (function() {
     // CTA listeners
     function on(id, fn) { var el = document.getElementById(id); if (el) el.addEventListener('click', fn); }
     on('lpNavLogin',   function() { showAuth(container, 'login'); });
-    on('lpNavSignup',  function() { showAuth(container, 'login'); });
+    on('lpNavSignup',  function() { showAuth(container, 'onboarding'); });
     on('lpHeroLogin',  function() { showAuth(container, 'login'); });
-    on('lpHeroSignup', function() { showAuth(container, 'login'); });
+    on('lpHeroSignup', function() { showAuth(container, 'onboarding'); });
     on('lpCtaLogin',   function() { showAuth(container, 'login'); });
-    on('lpCtaSignup',  function() { showAuth(container, 'login'); });
+    on('lpCtaSignup',  function() { showAuth(container, 'onboarding'); });
     on('lpFooterPrivacy', function() { if (window.PrivacyModal) PrivacyModal.show(); });
     on('lpFooterContract', function() { if (window.ContractModal) ContractModal.show(); });
   }
