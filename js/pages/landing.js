@@ -32,7 +32,6 @@ var LandingPage = (function() {
 
       // HERO
       '  <section class="lp-hero">',
-      '    <div class="lp-badge"><svg width="12" height="12" fill="none" stroke="#4F46E5" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg> Propulsé par Claude AI (Anthropic)</div>',
       '    <h1>Gérez tous vos avis clients<br>avec l\'<span>intelligence artificielle</span></h1>',
       '    <p class="lp-hero-sub">Centralisez vos avis Google, TripAdvisor et Yelp. Générez des réponses professionnelles en quelques secondes. Pour tout type d\'entreprise.</p>',
       '    <div class="lp-hero-ctas">',
