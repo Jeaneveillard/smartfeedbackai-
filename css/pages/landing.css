@@ -1,8 +1,8 @@
 /* ─── Landing Page ─── */
-.lp-root { font-family: 'Inter', -apple-system, sans-serif; color: var(--txt1); background: var(--card); min-height: 100vh; }
+.lp-root { font-family: 'Inter', -apple-system, sans-serif; color: var(--txt1); background: var(--card); min-height: 100vh; padding-top: 58px; }
 
 /* Nav */
-.lp-nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 0 40px; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+.lp-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 0 40px; height: 58px; display: flex; align-items: center; justify-content: space-between; }
 .lp-logo { display: flex; align-items: center; gap: 9px; }
 .lp-logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg,#818CF8,var(--primary)); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
 .lp-logo-text { font-weight: 800; font-size: 15px; letter-spacing: -.4px; }
