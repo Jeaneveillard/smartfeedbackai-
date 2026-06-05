@@ -61,6 +61,14 @@ var LoginPage = (function() {
       '      </div>',
       '      <div id="loginError" style="display:none;background:#FEF2F2;border:1px solid #FECACA;',
       '           border-radius:7px;padding:9px 12px;font-size:13px;color:#B91C1C;margin-bottom:12px;"></div>',
+      '      <label style="display:flex;align-items:flex-start;gap:9px;margin-bottom:14px;cursor:pointer;">',
+      '        <input type="checkbox" id="loginConsent" style="margin-top:2px;width:15px;height:15px;flex-shrink:0;accent-color:#4F46E5;cursor:pointer;">',
+      '        <span style="font-size:12px;color:#374151;line-height:1.5;">',
+      '          ' + (lang === 'en'
+            ? 'I have read and accept the <a href="#" onclick="event.preventDefault();PrivacyModal.show();" style="color:#4F46E5;text-decoration:none;font-weight:600;">Privacy Policy</a> and the <a href="#" onclick="event.preventDefault();ContractModal.show();" style="color:#4F46E5;text-decoration:none;font-weight:600;">Terms of Service</a>.'
+            : 'J\'ai lu et j\'accepte la <a href="#" onclick="event.preventDefault();PrivacyModal.show();" style="color:#4F46E5;text-decoration:none;font-weight:600;">Politique de confidentialité</a> et le <a href="#" onclick="event.preventDefault();ContractModal.show();" style="color:#4F46E5;text-decoration:none;font-weight:600;">Contrat de service</a>.') +
+      '        </span>',
+      '      </label>',
       '      <button type="submit" id="loginSubmit"',
       '              style="width:100%;background:#4F46E5;color:#fff;font-size:14px;font-weight:600;',
       '                     padding:11px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;">',
@@ -132,6 +140,15 @@ var LoginPage = (function() {
         var errEl    = document.getElementById('loginError');
         var btn      = document.getElementById('loginSubmit');
 
+        var consent = document.getElementById('loginConsent');
+        if (consent && !consent.checked) {
+          errEl.textContent = lang === 'en' ? 'Please accept the Privacy Policy and Terms of Service to continue.' : 'Veuillez accepter la Politique de confidentialité et le Contrat de service pour continuer.';
+          errEl.style.background = '#FEF2F2';
+          errEl.style.borderColor = '#FECACA';
+          errEl.style.color = '#B91C1C';
+          errEl.style.display = 'block';
+          return;
+        }
         if (!email || !password) {
           errEl.textContent = lang === 'en' ? 'Please enter your email/username and password.' : 'Veuillez saisir votre email/username et mot de passe.';
           errEl.style.display = 'block';
