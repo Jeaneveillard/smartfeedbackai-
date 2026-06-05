@@ -59,7 +59,9 @@ var AdminPage = (function () {
             : '<div style="background:#ECFDF5;color:#059669;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;display:inline-block;">✓</div>') +
         '</td>' +
         '<td style="padding:12px 16px;">' +
-          '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+          '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">' +
+            '<input class="form-input admin-custom-days" data-id="' + esc(t.id) + '" type="number" min="1" max="365" placeholder="j" style="width:52px;padding:3px 6px;font-size:11.5px;text-align:center;">' +
+            '<button class="btn btn-soft admin-start-custom" data-id="' + esc(t.id) + '" style="font-size:11.5px;padding:4px 10px;">+j</button>' +
             '<button class="btn btn-soft admin-start" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;">+30j</button>' +
             '<button class="btn btn-soft admin-start90" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" style="font-size:11.5px;padding:4px 10px;">+90j</button>' +
             (t.active
@@ -219,6 +221,16 @@ var AdminPage = (function () {
         })
         .catch(function () { Toast.show('Erreur', 'error'); el.disabled = false; el.textContent = '+' + days + 'j'; });
     }
+    container.querySelectorAll('.admin-start-custom').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var id    = el.getAttribute('data-id');
+        var input = container.querySelector('.admin-custom-days[data-id="' + id + '"]');
+        var days  = parseInt(input ? input.value : 0, 10);
+        if (!days || days < 1 || days > 365) { Toast.show('Entrez un nombre de jours (1–365)', 'error'); return; }
+        extendSub(el, days);
+        if (input) input.value = '';
+      });
+    });
     container.querySelectorAll('.admin-start').forEach(function (el) { el.addEventListener('click', function () { extendSub(el, 30); }); });
     container.querySelectorAll('.admin-start90').forEach(function (el) { el.addEventListener('click', function () { extendSub(el, 90); }); });
 
