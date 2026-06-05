@@ -24,9 +24,10 @@ var API = (function() {
   }
 
   return {
-    get:    function(path) { return fetch(base() + path, { headers: headers() }).then(handle); },
+    get:    function(path)       { return fetch(base() + path, { headers: headers() }).then(handle); },
     post:   function(path, body) { return fetch(base() + path, { method: 'POST',   headers: headers(), body: JSON.stringify(body) }).then(handle); },
     put:    function(path, body) { return fetch(base() + path, { method: 'PUT',    headers: headers(), body: JSON.stringify(body) }).then(handle); },
+    patch:  function(path, body) { return fetch(base() + path, { method: 'PATCH',  headers: headers(), body: JSON.stringify(body) }).then(handle); },
     delete: function(path)       { return fetch(base() + path, { method: 'DELETE', headers: headers() }).then(handle); }
   };
 })();

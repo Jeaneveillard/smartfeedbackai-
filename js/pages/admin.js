@@ -523,6 +523,17 @@ var AdminPage = (function () {
         '<button class="btn btn-ghost" style="margin-left:8px;font-size:12px;" onclick="this.previousElementSibling.type=this.previousElementSibling.type===\'password\'?\'text\':\'password\'">Afficher</button>' +
       '</div>' +
 
+      /* Beta duration */
+      '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;">' +
+        '<div style="font-size:13.5px;font-weight:700;margin-bottom:4px;">⏳ Durée de la période bêta</div>' +
+        '<div style="font-size:12.5px;color:var(--txt2);margin-bottom:12px;">Nombre de jours accordés automatiquement aux nouveaux comptes bêta lors de leur première activation.</div>' +
+        '<div style="display:flex;align-items:center;gap:10px;">' +
+          '<input class="form-input" type="number" id="betaDaysInput" min="1" max="365" style="width:100px;" placeholder="7">' +
+          '<button class="btn btn-primary" id="saveBetaDaysBtn" style="font-size:12.5px;">Enregistrer</button>' +
+          '<span id="betaDaysStatus" style="font-size:12.5px;"></span>' +
+        '</div>' +
+      '</div>' +
+
       /* SMTP */
       '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;">' +
         '<div style="font-size:13.5px;font-weight:700;margin-bottom:4px;">📧 Notifications Email (SMTP)</div>' +
@@ -547,6 +558,34 @@ var AdminPage = (function () {
         '</div>' +
         '<a href="https://console.cloud.google.com" target="_blank" class="btn btn-ghost" style="margin-top:10px;font-size:12px;">Ouvrir Google Cloud Console →</a>' +
       '</div>';
+
+    /* Beta days — load current value then wire save */
+    var betaInput  = container.querySelector('#betaDaysInput');
+    var betaSaveBtn = container.querySelector('#saveBetaDaysBtn');
+    var betaStatus = container.querySelector('#betaDaysStatus');
+    API.get('/admin/config')
+      .then(function(cfg) { if (betaInput) betaInput.value = cfg.beta_days || 7; })
+      .catch(function()   { if (betaInput) betaInput.value = 7; });
+
+    if (betaSaveBtn) {
+      betaSaveBtn.addEventListener('click', function() {
+        var days = parseInt(betaInput.value, 10);
+        if (!days || days < 1 || days > 365) { Toast.show('Valeur invalide (1–365)', 'error'); return; }
+        betaSaveBtn.disabled = true; betaSaveBtn.textContent = '…';
+        API.patch('/admin/config', { beta_days: days })
+          .then(function() {
+            betaStatus.textContent = '✅ Enregistré';
+            betaStatus.style.color = '#059669';
+            betaSaveBtn.disabled = false; betaSaveBtn.textContent = 'Enregistrer';
+            setTimeout(function() { betaStatus.textContent = ''; }, 3000);
+          })
+          .catch(function(err) {
+            betaStatus.textContent = '❌ ' + (err.message || 'Erreur');
+            betaStatus.style.color = '#EF4444';
+            betaSaveBtn.disabled = false; betaSaveBtn.textContent = 'Enregistrer';
+          });
+      });
+    }
 
     /* Test SMTP */
     var testBtn = container.querySelector('#testSmtpBtn');
