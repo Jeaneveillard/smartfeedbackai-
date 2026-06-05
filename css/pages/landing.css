@@ -7,6 +7,8 @@
 .lp-logo-icon { width: 34px; height: 34px; background: linear-gradient(135deg,#818CF8,var(--primary)); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
 .lp-logo-text { font-weight: 800; font-size: 15px; letter-spacing: -.4px; }
 .lp-nav-actions { display: flex; gap: 10px; align-items: center; }
+.lp-btn-lang { background: none; border: 1.5px solid var(--border); padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--txt2); font-family: inherit; letter-spacing: .5px; }
+.lp-btn-lang:hover { border-color: var(--primary); color: var(--primary); }
 .lp-btn-ghost { background: none; border: 1.5px solid var(--border); padding: 7px 16px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--txt1); font-family: inherit; }
 .lp-btn-ghost:hover { border-color: var(--primary); }
 .lp-btn-primary { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
