@@ -1,0 +1,168 @@
+/* ─── Onboarding Request Page ─── */
+.ob-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg, #F4F5F9);
+  padding: 40px 16px;
+}
+
+.ob-card {
+  background: #fff;
+  border: 1px solid var(--border, #E5E7EB);
+  border-radius: 14px;
+  padding: 36px 32px;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+
+.ob-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.ob-logo-icon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #818CF8, #4F46E5);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.ob-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  letter-spacing: -.4px;
+}
+
+.ob-subtitle {
+  font-size: 13px;
+  color: var(--txt2, #6B7280);
+  margin: 0;
+}
+
+.ob-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary, #4F46E5);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin: 24px 0 12px;
+}
+
+.ob-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ob-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ob-field.full {
+  grid-column: 1 / -1;
+}
+
+.ob-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--txt1, #374151);
+}
+
+.ob-label .ob-req {
+  color: var(--red, #EF4444);
+  margin-left: 2px;
+}
+
+.ob-input {
+  padding: 9px 12px;
+  border: 1.5px solid var(--border, #D1D5DB);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  width: 100%;
+  background: #fff;
+  color: var(--txt1, #111827);
+}
+
+.ob-input:focus {
+  border-color: var(--primary, #4F46E5);
+}
+
+.ob-error {
+  display: none;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: #B91C1C;
+  margin-top: 14px;
+}
+
+.ob-submit {
+  width: 100%;
+  background: var(--primary, #4F46E5);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 20px;
+}
+
+.ob-submit:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+.ob-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.ob-success-icon {
+  width: 64px;
+  height: 64px;
+  background: #D1FAE5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 28px;
+}
+
+.ob-success h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 10px;
+}
+
+.ob-success p {
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 540px) {
+  .ob-card { padding: 28px 18px; }
+  .ob-grid { grid-template-columns: 1fr; }
+  .ob-field.full { grid-column: 1; }
+}
