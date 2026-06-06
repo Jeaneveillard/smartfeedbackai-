@@ -249,7 +249,8 @@
         actionHtml = '<button class="btn btn-ghost" id="manualSyncBtn" style="font-size:12px;padding:5px 12px;">' + esc(t('sync_now')) + '</button>' +
                      '<span style="font-size:11px;color:var(--txt3);margin-left:8px">' + esc(syncTxt) + '</span>';
       } else if (isGoogle && !googleConnected) {
-        actionHtml = '<a class="btn btn-primary" href="http://localhost:3001/auth/google" style="font-size:12px;padding:5px 12px;text-decoration:none;">' + esc(t('connect_google')) + '</a>';
+        var apiBase = (window.API && API.base) ? API.base() : 'https://smartfeedbackai-api.onrender.com';
+        actionHtml = '<a class="btn btn-primary" href="' + esc(apiBase) + '/auth/google" style="font-size:12px;padding:5px 12px;text-decoration:none;">' + esc(t('connect_google')) + '</a>';
       }
 
       // URL fields for TripAdvisor and Yelp (manual copy-paste workflow)

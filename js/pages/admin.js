@@ -2,10 +2,12 @@ var AdminPage = (function () {
   'use strict';
 
   var currentTab = 'clients';
+  var _tenantsById = {};  // in-memory cache for the profile modal (avoids JSON-in-DOM)
 
   function esc(s) {
     return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   function fmtDate(v) {
@@ -31,6 +33,8 @@ var AdminPage = (function () {
 
   /* ─── Render clients tab ──────────────────────────────────────────────── */
   function renderClients(container, tenants) {
+    _tenantsById = {};
+    tenants.forEach(function (t) { _tenantsById[t.id] = t; });
     var rows = tenants.map(function (t) {
       var statusDot = t.active
         ? '<span style="width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block;margin-right:6px;"></span>'
@@ -69,7 +73,7 @@ var AdminPage = (function () {
               : '<button class="btn btn-soft admin-activate" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" style="font-size:11.5px;padding:4px 10px;">Activer</button>') +
             '<button class="btn btn-ghost admin-reset-pw" data-id="' + esc(t.id) + '" data-email="' + esc(t.email) + '" data-username="' + esc(t.username || t.email) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;">🔑</button>' +
             '<button class="btn btn-soft admin-preview" data-id="' + esc(t.id) + '" data-name="' + esc(t.name) + '" style="font-size:11.5px;padding:4px 10px;color:var(--primary);">👁 Voir</button>' +
-            '<button class="btn btn-soft admin-profile" data-id="' + esc(t.id) + '" data-tenant=\'' + JSON.stringify({name:t.name,email:t.email,sector:t.sector||'',phone:t.phone||'',address:t.address||'',city:t.city||'',website:t.website||'',plan:t.plan||'',created_at:t.created_at}).replace(/'/g,'&#39;') + '\' style="font-size:11.5px;padding:4px 10px;">📋 Profil</button>' +
+            '<button class="btn btn-soft admin-profile" data-id="' + esc(t.id) + '" style="font-size:11.5px;padding:4px 10px;">📋 Profil</button>' +
           '</div>' +
         '</td>' +
       '</tr>';
@@ -366,8 +370,8 @@ var AdminPage = (function () {
     /* Profile modal */
     container.querySelectorAll('.admin-profile').forEach(function(el) {
       el.addEventListener('click', function() {
-        var t;
-        try { t = JSON.parse(el.getAttribute('data-tenant')); } catch(e) { return; }
+        var t = _tenantsById[el.getAttribute('data-id')];
+        if (!t) return;
         var modal = document.createElement('div');
         modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9000;display:flex;align-items:center;justify-content:center;';
         modal.innerHTML =
@@ -499,7 +503,7 @@ var AdminPage = (function () {
                   '<div style="font-size:13px;font-weight:700;color:#065F46;margin-bottom:8px;">✅ Compte créé !</div>' +
                   (emailSent
                     ? '<div style="font-size:12px;color:#065F46;margin-bottom:8px;">📧 Invitation envoyée à ' + esc(data.tenant ? data.tenant.email : '') + '</div>'
-                    : '<div style="font-size:12px;color:#92400E;margin-bottom:8px;">⚠️ Email non envoyé. Partagez le lien :</div>') +
+                    : '<div style="font-size:12px;color:#92400E;margin-bottom:8px;">⚠️ Email non envoyé — partagez le lien manuellement.' + (data.invite && data.invite.emailError ? '<br><code style="font-size:10px;opacity:.8;">' + esc(data.invite.emailError) + '</code>' : '') + '</div>') +
                   '<input type="text" value="' + esc(inviteUrl) + '" readonly style="width:100%;padding:7px 10px;border:1px solid #D1D5DB;border-radius:6px;font-size:11px;font-family:monospace;box-sizing:border-box;">' +
                 '</div>';
               confirmBtn.textContent = 'Fermer';
@@ -537,12 +541,10 @@ var AdminPage = (function () {
     container.innerHTML =
       '<h2 style="font-size:16px;font-weight:800;margin:0 0 20px;">Configuration</h2>' +
 
-      /* Admin secret */
+      /* Admin secret — NEVER expose the value in client code */
       '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;">' +
         '<div style="font-size:13.5px;font-weight:700;margin-bottom:4px;">🔐 Clé Admin</div>' +
-        '<div style="font-size:12.5px;color:var(--txt2);margin-bottom:10px;">Utilisée pour accéder aux routes /admin/* via l\'API.</div>' +
-        '<input class="form-input" type="password" id="adminSecretDisplay" value="sfai-admin-Amboul2026!" style="max-width:360px;font-family:monospace;" readonly>' +
-        '<button class="btn btn-ghost" style="margin-left:8px;font-size:12px;" onclick="this.previousElementSibling.type=this.previousElementSibling.type===\'password\'?\'text\':\'password\'">Afficher</button>' +
+        '<div style="font-size:12.5px;color:var(--txt2);">La clé d\'accès aux routes <code>/admin/*</code> est stockée uniquement côté serveur (variable <code>ADMIN_SECRET</code> sur Render). Elle n\'est jamais affichée ici pour des raisons de sécurité.</div>' +
       '</div>' +
 
       /* Beta duration */
