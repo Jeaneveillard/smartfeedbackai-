@@ -447,8 +447,10 @@
   }
 
   /* ── Billing helpers ────────────────────────── */
-  var BASE_PRICE_CAD = 29.00;  // must match the Stripe product price (29 CAD/month)
-  var BASE_BIZ_CAD   = 99.00;
+  // Tax-INCLUDED total the client pays (must match the Stripe product price).
+  // The base (your revenue) + provincial taxes = this amount.
+  var PRICE_TOTAL_CAD = 49.00;
+  var BASE_BIZ_CAD    = 99.00;
   var FX = { CAD: 1.00, USD: 0.73 };  // approximate; updated periodically
 
   function fmt(amount, currency) {
@@ -472,9 +474,10 @@
     var isEn     = I18n.getLang() === 'en';
 
     var rate     = FX[currency] || 1;
-    var subtotal = BASE_PRICE_CAD * rate;
-    var taxAmt   = subtotal * (taxRate / 100);
-    var total    = subtotal + taxAmt;
+    // Total is tax-INCLUDED (what Stripe charges). Back-calculate the base + tax.
+    var total    = PRICE_TOTAL_CAD * rate;
+    var subtotal = total / (1 + taxRate / 100);
+    var taxAmt   = total - subtotal;
 
     var currencyOpts = Object.keys(FX).map(function(c) {
       return '<option value="' + c + '"' + (currency === c ? ' selected' : '') + '>' + c + '</option>';
@@ -489,7 +492,7 @@
 
     var altCurrency = currency === 'CAD' ? 'USD' : 'CAD';
     var altRate     = FX[altCurrency] || 1;
-    var altTotal    = BASE_PRICE_CAD * altRate;
+    var altTotal    = PRICE_TOTAL_CAD * altRate;
     var approxNote  = isEn ? 'Approximate exchange rate' : 'Taux de change approximatif';
     var altNote     = '<div style="font-size:11.5px;color:var(--txt3);margin-top:8px;">≈ ' + fmt(altTotal, altCurrency) + ' ' + esc(t('per_month')) + ' · ' + esc(approxNote) + '</div>';
 
@@ -530,9 +533,12 @@
             '<button class="btn btn-ghost" id="manageSubBtn">' + esc(isEn ? 'Manage subscription' : 'Gérer l\'abonnement') + '</button>' +
           '</div>' +
           '<div style="border-top:1px solid var(--primary-mid);padding-top:14px;">' +
-            '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--txt1);padding:4px 0;">' +
-              '<span>' + esc(t('total')) + '</span><span>' + fmt(subtotal, currency) + ' ' + esc(t('per_month')) +
-              (taxRate > 0 ? ' <span style="font-size:11px;font-weight:500;color:var(--txt3);">(' + (isEn ? 'taxes incl.' : 'taxes incl.') + ')</span>' : '') + '</span>' +
+            '<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--txt2);padding:6px 0;">' +
+              '<span>' + esc(t('subtotal')) + '</span><span>' + fmt(subtotal, currency) + '</span>' +
+            '</div>' +
+            taxRow +
+            '<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:var(--txt1);padding:8px 0;border-top:1.5px solid var(--primary-mid);margin-top:4px;">' +
+              '<span>' + esc(t('total')) + '</span><span>' + fmt(total, currency) + ' ' + esc(t('per_month')) + '</span>' +
             '</div>' +
             altNote +
           '</div>' +
@@ -562,7 +568,7 @@
               (isEn ? 'Continue after your trial' : 'Continuez après votre essai') +
             '</div>' +
             '<div style="font-size:13px;opacity:.85;margin-bottom:18px;">' +
-              (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(subtotal, currency) + ' ' + esc(t('per_month')) +
+              (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(total, currency) + ' ' + esc(t('per_month')) +
               (taxRate > 0 ? ' (' + (isEn ? 'taxes included' : 'taxes incluses') + ')' : '') +
             '</div>' +
             '<button class="btn" id="subscribeBtn" style="background:#fff;color:#4F46E5;font-weight:700;">' +
@@ -577,7 +583,7 @@
               (isEn ? 'Subscribe to SmartFeedback AI' : 'S\'abonner à SmartFeedback AI') +
             '</div>' +
             '<div style="font-size:13px;opacity:.85;margin-bottom:18px;">' +
-              (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(subtotal, currency) + ' ' + esc(t('per_month')) +
+              (isEn ? 'Starter plan — ' : 'Plan Starter — ') + fmt(total, currency) + ' ' + esc(t('per_month')) +
               (taxRate > 0 ? ' (' + (isEn ? 'taxes included' : 'taxes incluses') + ')' : '') +
             '</div>' +
             '<button class="btn" id="subscribeBtn" style="background:#fff;color:#4F46E5;font-weight:700;">' +
