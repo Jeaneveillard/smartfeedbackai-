@@ -2,6 +2,7 @@ var AdminPage = (function () {
   'use strict';
 
   var currentTab = 'clients';
+  var _clientTab = 'active';   // 'active' | 'inactive'
   var _tenantsById = {};  // in-memory cache for the profile modal (avoids JSON-in-DOM)
 
   function esc(s) {
@@ -35,7 +36,12 @@ var AdminPage = (function () {
   function renderClients(container, tenants) {
     _tenantsById = {};
     tenants.forEach(function (t) { _tenantsById[t.id] = t; });
-    var rows = tenants.map(function (t) {
+
+    var active   = tenants.filter(function(t) { return  t.active; });
+    var inactive = tenants.filter(function(t) { return !t.active; });
+    var filtered = _clientTab === 'active' ? active : inactive;
+
+    var rows = filtered.map(function (t) {
       var statusDot = t.active
         ? '<span style="width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block;margin-right:6px;"></span>'
         : '<span style="width:8px;height:8px;border-radius:50%;background:#EF4444;display:inline-block;margin-right:6px;"></span>';
@@ -79,8 +85,12 @@ var AdminPage = (function () {
       '</tr>';
     }).join('');
 
+    var tabStyle = 'cursor:pointer;padding:7px 16px;font-size:13px;font-weight:600;border-radius:8px;border:1.5px solid transparent;';
+    var tabActive   = tabStyle + 'background:var(--primary);color:#fff;border-color:var(--primary);';
+    var tabInactive = tabStyle + 'background:var(--card);color:var(--txt2);border-color:var(--border);';
+
     container.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
         '<div>' +
           '<h2 style="font-size:16px;font-weight:800;margin:0 0 4px;">Clients (' + tenants.length + ')</h2>' +
           '<p style="font-size:13px;color:var(--txt2);margin:0;">Gérez les accès et abonnements</p>' +
@@ -88,6 +98,16 @@ var AdminPage = (function () {
         '<button class="btn btn-primary" id="adminCreateBtn">' +
           '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
           ' Nouveau client' +
+        '</button>' +
+      '</div>' +
+
+      /* Active / Inactive tabs */
+      '<div style="display:flex;gap:8px;margin-bottom:16px;">' +
+        '<button class="client-tab" data-client-tab="active" style="' + (_clientTab === 'active' ? tabActive : tabInactive) + '">' +
+          '🟢 Actifs <span style="background:rgba(255,255,255,.25);padding:1px 7px;border-radius:10px;font-size:11px;margin-left:4px;">' + active.length + '</span>' +
+        '</button>' +
+        '<button class="client-tab" data-client-tab="inactive" style="' + (_clientTab === 'inactive' ? tabActive : tabInactive) + '">' +
+          '🔴 Désactivés <span style="background:rgba(0,0,0,.08);padding:1px 7px;border-radius:10px;font-size:11px;margin-left:4px;">' + inactive.length + '</span>' +
         '</button>' +
       '</div>' +
 
@@ -123,19 +143,29 @@ var AdminPage = (function () {
 
       /* Clients table */
       '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;">' +
-        '<table style="width:100%;border-collapse:collapse;">' +
-          '<thead><tr style="background:var(--bg);">' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Client</th>' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Plan</th>' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Début / Fin</th>' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Jours</th>' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:center;">Avis</th>' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:center;">En attente</th>' +
-            '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Actions</th>' +
-          '</tr></thead>' +
-          '<tbody>' + rows + '</tbody>' +
-        '</table>' +
+        (filtered.length === 0
+          ? '<div style="padding:40px;text-align:center;color:var(--txt3);">Aucun client ' + (_clientTab === 'active' ? 'actif' : 'désactivé') + '.</div>'
+          : '<table style="width:100%;border-collapse:collapse;">' +
+              '<thead><tr style="background:var(--bg);">' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Client</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Plan</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Début / Fin</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Jours</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:center;">Avis</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:center;">En attente</th>' +
+                '<th style="padding:10px 16px;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;text-align:left;">Actions</th>' +
+              '</tr></thead>' +
+              '<tbody>' + rows + '</tbody>' +
+            '</table>') +
       '</div>';
+
+    /* Tab switching — re-render with same data, no new API call */
+    container.querySelectorAll('.client-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        _clientTab = tab.getAttribute('data-client-tab');
+        renderClients(container, tenants);
+      });
+    });
 
     bindClientEvents(container);
   }
