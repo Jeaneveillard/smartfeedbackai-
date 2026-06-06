@@ -2,6 +2,7 @@ var API = (function() {
   'use strict';
   var BASE = 'https://smartfeedbackai-api.onrender.com';
   var LOCAL = 'http://localhost:3001';
+  var _reloading = false;
 
   function base() {
     if (window.API_BASE) return window.API_BASE;
@@ -16,6 +17,8 @@ var API = (function() {
 
   function handle(res) {
     if (res.status === 401) {
+      if (_reloading) return Promise.reject(new Error('Non autorisé'));
+      _reloading = true;
       // If an admin was previewing a client and the preview token expired,
       // restore the admin session instead of logging everyone out.
       var adminJwt = localStorage.getItem('sfai_jwt_admin');
