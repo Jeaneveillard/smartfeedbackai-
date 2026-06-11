@@ -289,10 +289,17 @@
       var isLocal = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
       if (isLocal) {
         document.body.innerHTML =
-          '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:12px;color:#6B7280">' +
-          '<strong style="color:#111827;font-size:16px">Serveur local non démarré</strong>' +
-          '<p style="font-size:13px;">Lancez : <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npx serve .</code></p>' +
+          '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:14px;color:#6B7280;text-align:center;padding:20px;box-sizing:border-box;">' +
+          '<strong style="color:#111827;font-size:16px">Backend local non démarré</strong>' +
+          '<p style="font-size:13px;max-width:440px;line-height:1.7;margin:0;">Vous êtes connecté avec un compte, mais l\'API locale ne répond pas sur <code style="background:#F3F4F6;padding:2px 6px;border-radius:4px">localhost:3001</code>.<br>' +
+          'Pour les vraies données, lancez <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npm run dev</code> dans <code>smartfeedbackai-api/</code> puis rechargez.</p>' +
+          '<button id="sfaiDemoBtn" style="background:#4F46E5;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Me déconnecter et passer en mode démo</button>' +
           '</div>';
+        var demoBtn = document.getElementById('sfaiDemoBtn');
+        if (demoBtn) demoBtn.addEventListener('click', function() {
+          localStorage.removeItem('sfai_jwt');
+          window.location.reload();
+        });
         return;
       }
       console.error(err);
