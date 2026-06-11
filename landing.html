@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartFeedback AI — Répondez à vos avis Google en 30 secondes</title>
+  <meta name="description" content="L'outil des restaurateurs du Québec pour répondre à chaque avis Google avec l'IA, dans le ton de votre maison. Vous validez, c'est publié. 30 secondes par avis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1C1917;
+      --ink-soft: #44403C;
+      --cream: #FBF7F0;
+      --cream-deep: #F3ECDF;
+      --paper: #FFFFFF;
+      --primary: #4F46E5;
+      --primary-deep: #4338CA;
+      --star: #F59F00;
+      --green: #2F9E44;
+      --red: #E03131;
+      --line: rgba(28, 25, 23, .12);
+      --line-light: rgba(251, 247, 240, .14);
+      --display: 'Fraunces', Georgia, serif;
+      --body: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--body);
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img, svg { display: block; }
+    a { color: inherit; }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Nav ---------- */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(28, 25, 23, .88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line-light);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--cream); }
+    .brand-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 10px rgba(79, 70, 229, .45);
+    }
+    .brand strong { font-size: 16px; letter-spacing: -.2px; }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-links a {
+      color: rgba(251, 247, 240, .75); text-decoration: none;
+      font-size: 14px; font-weight: 600; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: var(--body); font-weight: 700; text-decoration: none;
+      border-radius: 10px; cursor: pointer; border: none;
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+    .btn-primary {
+      background: var(--primary); color: #fff;
+      padding: 12px 22px; font-size: 15px;
+      box-shadow: 0 4px 18px rgba(79, 70, 229, .35);
+    }
+    .btn-primary:hover { background: var(--primary-deep); transform: translateY(-1px); box-shadow: 0 6px 22px rgba(79, 70, 229, .45); }
+    .btn-ghost {
+      background: transparent; color: var(--cream);
+      border: 1.5px solid rgba(251, 247, 240, .3);
+      padding: 12px 22px; font-size: 15px;
+    }
+    .btn-ghost:hover { border-color: rgba(251, 247, 240, .65); transform: translateY(-1px); }
+    .btn-sm { padding: 9px 18px; font-size: 13.5px; }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      background:
+        radial-gradient(900px 480px at 82% -10%, rgba(79, 70, 229, .28), transparent 64%),
+        radial-gradient(640px 420px at -8% 108%, rgba(245, 159, 0, .12), transparent 60%),
+        var(--ink);
+      color: var(--cream);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(rgba(251,247,240,.05) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px;
+      align-items: center; padding: 88px 0 104px;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--star); margin-bottom: 22px;
+    }
+    .eyebrow::before { content: ""; width: 26px; height: 1.5px; background: var(--star); }
+    h1 {
+      font-family: var(--display); font-weight: 600;
+      font-size: clamp(36px, 4.6vw, 56px);
+      line-height: 1.08; letter-spacing: -.01em;
+      margin-bottom: 22px;
+    }
+    h1 em { font-style: italic; color: #A5B4FC; }
+    .hero-sub {
+      font-size: 18px; color: rgba(251, 247, 240, .78);
+      max-width: 48ch; margin-bottom: 34px;
+    }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 26px; }
+    .hero-trust { font-size: 13.5px; color: rgba(251, 247, 240, .55); }
+    .hero-trust strong { color: rgba(251, 247, 240, .85); }
+
+    /* Demo card stack */
+    .demo { position: relative; }
+    .card {
+      background: var(--paper); color: var(--ink);
+      border-radius: 16px; padding: 22px 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+    }
+    .card-review { transform: rotate(-1.2deg); position: relative; z-index: 1; }
+    .card-reply {
+      transform: rotate(1deg) translateY(-14px);
+      margin-left: 38px; position: relative; z-index: 2;
+      border-left: 4px solid var(--primary);
+    }
+    .review-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+      background: #FFE3E3; color: var(--red);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px;
+    }
+    .review-meta { font-size: 13px; color: var(--ink-soft); }
+    .review-meta strong { display: block; font-size: 14.5px; color: var(--ink); }
+    .stars { color: var(--star); letter-spacing: 2px; font-size: 14px; }
+    .stars .off { color: #D6D3D1; }
+    .review-text { font-size: 14.5px; color: var(--ink-soft); }
+    .reply-head {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+      font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--primary);
+    }
+    .reply-head .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .3 } }
+    .reply-text { font-size: 14.5px; min-height: 88px; }
+    .reply-text::after {
+      content: ""; display: inline-block; width: 2px; height: 1em;
+      background: var(--primary); margin-left: 2px; vertical-align: text-bottom;
+      animation: pulse 0.9s infinite;
+    }
+    .reply-text.done::after { display: none; }
+    .reply-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+    }
+    .chip {
+      font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px;
+      background: #EEF2FF; color: var(--primary);
+    }
+    .reply-foot .btn-primary { padding: 8px 16px; font-size: 13px; border-radius: 8px; }
+    .demo-caption {
+      text-align: center; margin-top: 6px;
+      font-size: 12.5px; color: rgba(251, 247, 240, .5); font-style: italic;
+    }
+
+    /* ---------- Stats band ---------- */
+    .stats { background: var(--cream-deep); border-bottom: 1px solid var(--line); }
+    .stats-inner {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+      padding: 44px 0; text-align: center;
+    }
+    .stat-num {
+      font-family: var(--display); font-weight: 700; font-size: 40px;
+      color: var(--ink); line-height: 1.1;
+    }
+    .stat-num span { color: var(--primary); }
+    .stat-label { font-size: 14px; color: var(--ink-soft); max-width: 30ch; margin: 6px auto 0; }
+    .stat-src { font-size: 11.5px; color: #A8A29E; margin-top: 4px; }
+
+    /* ---------- Sections ---------- */
+    section { padding: 88px 0; }
+    .sec-head { max-width: 640px; margin-bottom: 52px; }
+    .sec-head.center { margin-left: auto; margin-right: auto; text-align: center; }
+    .kicker {
+      font-size: 12.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 12px;
+    }
+    h2 {
+      font-family: var(--display); font-weight: 600;
+      font-size: clamp(28px, 3.4vw, 40px); line-height: 1.15;
+      letter-spacing: -.01em; margin-bottom: 14px;
+    }
+    .sec-sub { font-size: 16.5px; color: var(--ink-soft); }
+
+    /* Steps */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .step {
+      background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+      padding: 30px 28px; position: relative;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .step:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(28, 25, 23, .1); }
+    .step-num {
+      font-family: var(--display); font-style: italic; font-weight: 600;
+      font-size: 52px; color: var(--cream-deep);
+      -webkit-text-stroke: 1.2px var(--primary);
+      line-height: 1; margin-bottom: 18px;
+    }
+    .step h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
+    .step p { font-size: 14.5px; color: var(--ink-soft); }
+
+    /* Features */
+    .features-sec { background: var(--ink); color: var(--cream); }
+    .features-sec .sec-sub { color: rgba(251, 247, 240, .7); }
+    .features-sec .kicker { color: var(--star); }
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .feat {
+      border: 1px solid var(--line-light); border-radius: 14px; padding: 26px 24px;
+      background: rgba(251, 247, 240, .03);
+      transition: background .2s, border-color .2s;
+    }
+    .feat:hover { background: rgba(251, 247, 240, .07); border-color: rgba(251, 247, 240, .28); }
+    .feat-icon {
+      width: 40px; height: 40px; border-radius: 10px; margin-bottom: 16px;
+      background: rgba(79, 70, 229, .25); color: #A5B4FC;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .feat p { font-size: 13.5px; color: rgba(251, 247, 240, .65); }
+
+    /* Pricing */
+    .pricing { background: var(--cream); }
+    .price-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 420px)); gap: 28px;
+      justify-content: center; align-items: stretch;
+    }
+    .plan {
+      background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+      padding: 36px 32px; display: flex; flex-direction: column;
+    }
+    .plan-hot {
+      border: 2px solid var(--primary); position: relative;
+      box-shadow: 0 20px 50px rgba(79, 70, 229, .16);
+    }
+    .plan-badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--primary); color: #fff; white-space: nowrap;
+      font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+      padding: 5px 16px; border-radius: 999px;
+    }
+    .plan h3 { font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+    .plan-for { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 20px; }
+    .plan-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .plan-price .amount { font-family: var(--display); font-weight: 700; font-size: 46px; }
+    .plan-price .period { font-size: 14px; color: var(--ink-soft); }
+    .plan-price .was { font-size: 17px; color: #A8A29E; text-decoration: line-through; }
+    .plan-note { font-size: 12.5px; color: var(--green); font-weight: 700; margin-bottom: 22px; }
+    .plan ul { list-style: none; padding: 0; margin: 0 0 28px; flex: 1; }
+    .plan li {
+      font-size: 14px; padding: 7px 0 7px 28px; position: relative; color: var(--ink-soft);
+    }
+    .plan li::before {
+      content: "✓"; position: absolute; left: 0; top: 7px;
+      color: var(--green); font-weight: 800;
+    }
+    .plan li.soon::before { content: "•"; color: #A8A29E; }
+    .plan li.soon { color: #A8A29E; }
+    .plan .btn { width: 100%; }
+    .btn-outline {
+      background: transparent; color: var(--primary);
+      border: 1.5px solid var(--primary); padding: 12px 22px; font-size: 15px;
+    }
+    .btn-outline:hover { background: #EEF2FF; transform: translateY(-1px); }
+    .price-foot { text-align: center; margin-top: 26px; font-size: 13.5px; color: var(--ink-soft); }
+
+    /* FAQ */
+    .faq { background: var(--cream-deep); }
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    details {
+      background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+      margin-bottom: 12px; overflow: hidden;
+    }
+    summary {
+      cursor: pointer; list-style: none; padding: 18px 22px;
+      font-weight: 700; font-size: 15.5px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-size: 22px; color: var(--primary); flex-shrink: 0; transition: transform .2s; }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { padding: 0 22px 18px; font-size: 14.5px; color: var(--ink-soft); }
+
+    /* Final CTA */
+    .final {
+      background:
+        radial-gradient(700px 380px at 50% -20%, rgba(79, 70, 229, .35), transparent 65%),
+        var(--ink);
+      color: var(--cream); text-align: center;
+    }
+    .final h2 { max-width: 18ch; margin: 0 auto 16px; }
+    .final .sec-sub { color: rgba(251, 247, 240, .72); max-width: 52ch; margin: 0 auto 36px; }
+    .final h2 em { font-style: italic; color: #A5B4FC; }
+
+    /* Footer */
+    footer {
+      background: var(--ink); color: rgba(251, 247, 240, .55);
+      border-top: 1px solid var(--line-light);
+      padding: 30px 0; font-size: 13px;
+    }
+    .foot-inner { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+    footer a { color: rgba(251, 247, 240, .75); text-decoration: none; margin-left: 18px; }
+    footer a:hover { color: var(--cream); }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 960px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; padding: 64px 0 76px; }
+      .steps, .feat-grid { grid-template-columns: 1fr 1fr; }
+      .stats-inner { grid-template-columns: 1fr; gap: 26px; padding: 36px 0; }
+      .price-grid { grid-template-columns: minmax(0, 460px); }
+    }
+    @media (max-width: 640px) {
+      .nav-links a:not(.btn) { display: none; }
+      .steps, .feat-grid { grid-template-columns: 1fr; }
+      section { padding: 64px 0; }
+      .card-reply { margin-left: 14px; }
+      .hero-ctas .btn { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">
+        <span class="brand-icon">
+          <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>
+        </span>
+        <strong>SmartFeedback AI</strong>
+      </a>
+      <div class="nav-links">
+        <a href="#fonctionnement">Fonctionnement</a>
+        <a href="#tarifs">Tarifs</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-primary btn-sm" href="/">Essayer gratuitement</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="top">
+    <div class="wrap hero-inner">
+      <div>
+        <span class="eyebrow">Pour les restaurateurs du Québec</span>
+        <h1>Vos avis Google méritent une réponse.<br><em>Pas votre soirée.</em></h1>
+        <p class="hero-sub">
+          SmartFeedback AI lit chaque avis laissé sur votre fiche Google et rédige
+          une réponse professionnelle, dans le ton de votre maison. Vous validez,
+          c'est publié. <strong>30 secondes par avis.</strong>
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="/">Essayer gratuitement →</a>
+          <a class="btn btn-ghost" href="mailto:jeaneveillard@gmail.com?subject=D%C3%A9mo%20SmartFeedback%20AI">Réserver une démo de 15 min</a>
+        </div>
+        <p class="hero-trust">Connexion sécurisée avec votre compte <strong>Google Business Profile</strong> — aucun mot de passe partagé, application vérifiée par Google.</p>
+      </div>
+
+      <div class="demo">
+        <div class="card card-review">
+          <div class="review-head">
+            <span class="avatar">MT</span>
+            <div class="review-meta">
+              <strong>Marc T.</strong>
+              <span class="stars">★★<span class="off">★★★</span> · il y a 2 jours · Google</span>
+            </div>
+          </div>
+          <p class="review-text">« Attente de 45 minutes un mardi soir, le serveur semblait débordé. La bavette était bonne mais froide. Déçu, on était des habitués… »</p>
+        </div>
+        <div class="card card-reply">
+          <div class="reply-head"><span class="dot"></span> Réponse générée par l'IA — ton chaleureux</div>
+          <p class="reply-text" id="typed"></p>
+          <div class="reply-foot">
+            <span class="chip">Modifiable avant envoi</span>
+            <a class="btn btn-primary" href="/">Publier ✓</a>
+          </div>
+        </div>
+        <p class="demo-caption">Démo réelle de l'outil — rien n'est publié sans votre validation.</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ STATS ============ -->
+  <div class="stats">
+    <div class="wrap stats-inner">
+      <div class="reveal">
+        <div class="stat-num">89<span>%</span></div>
+        <p class="stat-label">des consommateurs lisent les réponses des établissements aux avis</p>
+        <p class="stat-src">BrightLocal, Local Consumer Review Survey</p>
+      </div>
+      <div class="reveal">
+        <div class="stat-num"><span>+</span>visibilité</div>
+        <p class="stat-label">Google recommande officiellement de répondre aux avis pour améliorer votre présence locale</p>
+        <p class="stat-src">Google Business Profile, centre d'aide</p>
+      </div>
+      <div class="reveal">
+        <div class="stat-num">30<span> s</span></div>
+        <p class="stat-label">par réponse avec SmartFeedback AI, au lieu de 10 minutes à chercher ses mots</p>
+        <p class="stat-src">Validation en un clic depuis le tableau de bord</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FONCTIONNEMENT ============ -->
+  <section id="fonctionnement">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <p class="kicker">Fonctionnement</p>
+        <h2>De l'avis publié à la réponse parfaite, en trois gestes</h2>
+        <p class="sec-sub">Pensé pour des journées de restaurateur : aucune compétence technique, aucun logiciel à installer.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <h3>Connectez votre fiche Google</h3>
+          <p>Un clic sur « Se connecter avec Google » et vos avis apparaissent dans votre tableau de bord. Connexion officielle et sécurisée (OAuth) — nous ne voyons jamais votre mot de passe.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <h3>L'IA rédige dans votre ton</h3>
+          <p>Professionnel, chaleureux, concis ou personnalisé : l'IA s'adapte à la note, au contenu de l'avis et au style de votre maison. En français impeccable.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <h3>Vous validez, c'est publié</h3>
+          <p>Relisez, ajustez un mot si besoin, cliquez sur Publier. La réponse part sur votre fiche Google au nom de votre établissement. Rien ne part sans vous.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="features-sec">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="kicker">Ce que vous obtenez</p>
+        <h2>Un tableau de bord complet, pas juste un générateur de texte</h2>
+      </div>
+      <div class="feat-grid">
+        <div class="feat reveal">
+          <div class="feat-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg></div>
+          <h3>Réponses IA sur mesure</h3>
+          <p>Chaque réponse tient compte de la note, du contenu de l'avis et du prénom du client. Quatre tons disponibles, ajustables avant publication.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></div>
+          <h3>Tous vos avis au même endroit</h3>
+          <p>Fini les onglets ouverts partout : avis en attente, avis répondus, notes et tendances — tout est visible d'un coup d'œil.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div>
+          <h3>Analytique intelligente</h3>
+          <p>L'IA détecte les sujets qui reviennent dans vos avis — service, attente, plats — pour que vous corrigiez la cause, pas seulement le symptôme.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h3>Validation avant publication</h3>
+          <p>L'IA propose, vous disposez. Aucune réponse ne part sur votre fiche sans votre accord explicite.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></div>
+          <h3>Export et historique</h3>
+          <p>Exportez vos avis et réponses en CSV pour vos rapports ou votre comptable. Tout votre historique reste accessible.</p>
+        </div>
+        <div class="feat reveal">
+          <div class="feat-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33h0a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51h0a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v0a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+          <h3>TripAdvisor &amp; Yelp à venir</h3>
+          <p>Google d'abord, parce que c'est là que vos clients vous cherchent. Les autres plateformes arrivent ensuite, au même endroit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section class="pricing" id="tarifs">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <p class="kicker">Tarifs</p>
+        <h2>Moins cher qu'un plat du jour par semaine</h2>
+        <p class="sec-sub">Lancement au Québec : les premiers établissements profitent du prix fondateur, garanti à vie.</p>
+      </div>
+      <div class="price-grid">
+        <div class="plan plan-hot reveal">
+          <span class="plan-badge">Offre fondateur — places limitées</span>
+          <h3>Fondateur</h3>
+          <p class="plan-for">Pour les premiers restaurants partenaires</p>
+          <div class="plan-price">
+            <span class="amount">39 $</span>
+            <span class="period">/ mois</span>
+            <span class="was">79 $</span>
+          </div>
+          <p class="plan-note">Premier mois gratuit · sans engagement · prix garanti à vie</p>
+          <ul>
+            <li>Avis Google illimités, réponses IA illimitées</li>
+            <li>4 tons de réponse personnalisables</li>
+            <li>Tableau de bord + analytique IA</li>
+            <li>Export CSV de vos avis et réponses</li>
+            <li>Support direct avec le fondateur</li>
+            <li>Votre avis façonne les prochaines fonctionnalités</li>
+          </ul>
+          <a class="btn btn-primary" href="mailto:jeaneveillard@gmail.com?subject=Offre%20fondateur%20SmartFeedback%20AI">Devenir restaurant fondateur</a>
+        </div>
+        <div class="plan reveal">
+          <h3>Standard</h3>
+          <p class="plan-for">Après la période de lancement</p>
+          <div class="plan-price">
+            <span class="amount">79 $</span>
+            <span class="period">/ mois</span>
+          </div>
+          <p class="plan-note" style="color:var(--ink-soft);">Disponible à la fin de l'offre fondateur</p>
+          <ul>
+            <li>Tout ce que comprend l'offre fondateur</li>
+            <li class="soon">Multi-établissements</li>
+            <li class="soon">TripAdvisor &amp; Yelp</li>
+            <li class="soon">Rapports mensuels automatiques</li>
+          </ul>
+          <a class="btn btn-outline" href="/">Essayer la démo</a>
+        </div>
+      </div>
+      <p class="price-foot">Prix en dollars canadiens. Annulable en tout temps, vos données vous appartiennent.</p>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <div class="sec-head center reveal">
+        <p class="kicker">Questions fréquentes</p>
+        <h2>Tout ce qu'on nous demande avant de commencer</h2>
+      </div>
+      <div class="faq-list reveal">
+        <details>
+          <summary>Est-ce que l'IA publie des réponses sans mon accord ?</summary>
+          <p>Jamais. L'IA propose une réponse, vous la relisez, la modifiez si besoin, puis vous cliquez sur Publier. Rien ne part sur votre fiche Google sans votre validation explicite.</p>
+        </details>
+        <details>
+          <summary>Les réponses font-elles « robot » ?</summary>
+          <p>Non — c'est précisément ce qu'on a travaillé. L'IA adapte chaque réponse à la note, au contenu de l'avis et au ton de votre maison (chaleureux, professionnel, concis…). Elle mentionne le prénom du client et reprend les points précis de son avis. Et comme vous validez tout, vous gardez le dernier mot.</p>
+        </details>
+        <details>
+          <summary>Comment se passe la connexion à ma fiche Google ?</summary>
+          <p>Par le bouton officiel « Se connecter avec Google » (protocole OAuth 2.0). Vous autorisez SmartFeedback AI à lire vos avis et à publier des réponses en votre nom — c'est tout. Nous ne voyons jamais votre mot de passe, et vous pouvez révoquer l'accès à tout moment depuis votre compte Google. Notre application est vérifiée par Google.</p>
+        </details>
+        <details>
+          <summary>Je ne suis pas à l'aise avec la technologie. C'est compliqué ?</summary>
+          <p>Si vous savez consulter vos avis Google, vous savez utiliser SmartFeedback AI. Il n'y a rien à installer : ça fonctionne dans votre navigateur, sur ordinateur comme sur tablette. Et pendant l'offre fondateur, c'est le fondateur lui-même qui vous accompagne pour la mise en route.</p>
+        </details>
+        <details>
+          <summary>Que deviennent mes données si j'annule ?</summary>
+          <p>Vos avis restent sur Google — ils vous appartiennent. À l'annulation, votre accès est révoqué et vos données sont supprimées de nos systèmes, conformément à notre <a href="/privacy.html">politique de confidentialité</a>.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL CTA ============ -->
+  <section class="final">
+    <div class="wrap reveal">
+      <h2>Ce soir, occupez-vous de la salle.<br><em>On s'occupe des avis.</em></h2>
+      <p class="sec-sub">Essayez SmartFeedback AI gratuitement, ou réservez 15 minutes — on vous fait la démo directement sur les avis de votre restaurant.</p>
+      <div class="hero-ctas" style="justify-content:center;">
+        <a class="btn btn-primary" href="/">Essayer gratuitement →</a>
+        <a class="btn btn-ghost" href="mailto:jeaneveillard@gmail.com?subject=D%C3%A9mo%20SmartFeedback%20AI">Réserver une démo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="wrap foot-inner">
+      <span>© 2026 SmartFeedback AI — Montréal, QC</span>
+      <span>
+        <a href="/privacy.html">Confidentialité</a>
+        <a href="/terms.html">Conditions</a>
+        <a href="mailto:jeaneveillard@gmail.com">Contact</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Effet machine à écrire sur la réponse IA du hero
+      var TEXT = "Bonjour Marc, merci d'avoir pris le temps de nous écrire — et toutes nos excuses pour cette soirée qui n'était pas à la hauteur de vos habitudes. L'attente et la température de votre bavette ne reflètent pas nos standards. Nous serions honorés de nous rattraper : passez nous voir, votre prochaine visite est pour nous. — L'équipe";
+      var el = document.getElementById('typed');
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) {
+        el.textContent = TEXT;
+        el.classList.add('done');
+      } else {
+        var i = 0;
+        setTimeout(function tick() {
+          el.textContent = TEXT.slice(0, ++i);
+          if (i < TEXT.length) setTimeout(tick, 18);
+          else el.classList.add('done');
+        }, 700);
+      }
+
+      // Révélation au défilement
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: .12 });
+      document.querySelectorAll('.reveal').forEach(function(n) { io.observe(n); });
+    })();
+  </script>
+</body>
+</html>

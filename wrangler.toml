@@ -4,16 +4,3 @@ compatibility_date = "2024-01-01"
 [assets]
 directory = "."
 not_found_handling = "single-page-application"
-exclude = [
-  ".git",
-  ".git/**",
-  "node_modules",
-  "node_modules/**",
-  ".superpowers/**",
-  ".wrangler/**",
-  "deploy.ps1",
-  ".cf-token",
-  "test-*.png",
-  "*.test.js",
-  "test-playwright.js"
-]

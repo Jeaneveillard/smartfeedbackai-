@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartFeedback AI — One-pager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1C1917;
+      --ink-soft: #44403C;
+      --cream: #FBF7F0;
+      --cream-deep: #F3ECDF;
+      --primary: #4F46E5;
+      --star: #F59F00;
+      --green: #2F9E44;
+      --red: #E03131;
+      --line: rgba(28, 25, 23, .14);
+    }
+    @page { size: Letter; margin: 0; }
+    * { box-sizing: border-box; margin: 0; }
+    html, body { width: 8.5in; height: 11in; }
+    body {
+      font-family: 'Hanken Grotesk', sans-serif;
+      color: var(--ink); background: var(--cream);
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      display: flex; flex-direction: column;
+      font-size: 10.5pt; line-height: 1.5;
+    }
+    .display { font-family: 'Fraunces', Georgia, serif; }
+
+    /* ---- Header ---- */
+    .head {
+      background: radial-gradient(420px 260px at 85% -30%, rgba(79,70,229,.4), transparent 65%), var(--ink);
+      color: var(--cream); padding: .42in .55in .38in;
+    }
+    .head-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: .26in; }
+    .brand { display: flex; align-items: center; gap: 9px; }
+    .brand-icon {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand strong { font-size: 12.5pt; letter-spacing: -.2px; }
+    .head-contact { font-size: 8.5pt; color: rgba(251,247,240,.65); text-align: right; line-height: 1.45; }
+    .head h1 {
+      font-family: 'Fraunces', Georgia, serif; font-weight: 600;
+      font-size: 24pt; line-height: 1.12; letter-spacing: -.01em; margin-bottom: 8px;
+    }
+    .head h1 em { font-style: italic; color: #A5B4FC; }
+    .head p { font-size: 11pt; color: rgba(251,247,240,.8); max-width: 58ch; }
+
+    /* ---- Body ---- */
+    .body { flex: 1; padding: .34in .55in; display: flex; flex-direction: column; gap: .22in; }
+    .cols { display: grid; grid-template-columns: 1.06fr .94fr; gap: .3in; align-items: start; }
+
+    .kicker {
+      font-size: 8pt; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 6px;
+    }
+    .steps { display: flex; flex-direction: column; gap: 9px; }
+    .step { display: flex; gap: 10px; align-items: flex-start; }
+    .step-num {
+      font-family: 'Fraunces', Georgia, serif; font-style: italic; font-weight: 700;
+      font-size: 15pt; color: var(--primary); line-height: 1.25; flex-shrink: 0; width: 18px;
+    }
+    .step h3 { font-size: 10.5pt; font-weight: 800; }
+    .step p { font-size: 9pt; color: var(--ink-soft); }
+
+    .stats { display: flex; gap: 14px; margin-top: 12px; }
+    .stat { flex: 1; background: var(--cream-deep); border-radius: 9px; padding: 9px 11px; }
+    .stat b { font-family: 'Fraunces', Georgia, serif; font-size: 14pt; color: var(--ink); display: block; line-height: 1.2; }
+    .stat b span { color: var(--primary); }
+    .stat small { font-size: 7.5pt; color: var(--ink-soft); line-height: 1.35; display: block; }
+
+    /* Demo cards */
+    .card {
+      background: #fff; border-radius: 10px; padding: 11px 13px;
+      box-shadow: 0 5px 18px rgba(28,25,23,.13); border: 1px solid var(--line);
+    }
+    .card-review { transform: rotate(-.7deg); }
+    .card-reply { transform: rotate(.5deg) translateY(-4px); margin-left: .22in; border-left: 3px solid var(--primary); }
+    .review-head { display: flex; gap: 8px; align-items: center; margin-bottom: 5px; }
+    .avatar {
+      width: 24px; height: 24px; border-radius: 50%; background: #FFE3E3; color: var(--red);
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 7.5pt;
+    }
+    .review-meta { font-size: 8pt; color: var(--ink-soft); line-height: 1.3; }
+    .review-meta strong { display: block; color: var(--ink); font-size: 8.5pt; }
+    .stars { color: var(--star); letter-spacing: 1px; }
+    .stars .off { color: #D6D3D1; }
+    .card p.txt { font-size: 8.5pt; color: var(--ink-soft); }
+    .reply-head {
+      font-size: 7pt; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--primary); margin-bottom: 5px;
+    }
+    .demo-cap { font-size: 7.5pt; color: var(--ink-soft); font-style: italic; text-align: center; margin-top: 7px; }
+
+    /* Features */
+    .feats { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 16px; }
+    .feat { display: flex; gap: 7px; font-size: 9pt; color: var(--ink-soft); align-items: flex-start; }
+    .feat::before { content: "✓"; color: var(--green); font-weight: 800; flex-shrink: 0; }
+    .feat b { color: var(--ink); }
+
+    /* Offer */
+    .offer {
+      border: 2px solid var(--primary); border-radius: 12px; background: #fff;
+      padding: 13px 16px; display: flex; align-items: center; gap: 18px;
+      box-shadow: 0 8px 24px rgba(79,70,229,.14);
+    }
+    .offer-price { text-align: center; flex-shrink: 0; padding-right: 16px; border-right: 1px solid var(--line); }
+    .offer-badge {
+      display: inline-block; background: var(--primary); color: #fff; border-radius: 999px;
+      font-size: 7pt; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
+      padding: 3px 10px; margin-bottom: 5px; white-space: nowrap;
+    }
+    .offer-amount { font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 23pt; line-height: 1.1; }
+    .offer-amount small { font-size: 9pt; font-weight: 600; color: var(--ink-soft); }
+    .offer-was { font-size: 9pt; color: #A8A29E; text-decoration: line-through; }
+    .offer-body h3 { font-size: 11.5pt; font-weight: 800; margin-bottom: 3px; }
+    .offer-body p { font-size: 9pt; color: var(--ink-soft); }
+    .offer-body .green { color: var(--green); font-weight: 700; }
+
+    /* Footer */
+    .foot {
+      background: var(--ink); color: rgba(251,247,240,.85);
+      padding: .2in .55in; display: flex; align-items: center; justify-content: space-between;
+      font-size: 9pt;
+    }
+    .foot b { color: #fff; font-size: 10.5pt; }
+    .foot .cta { font-size: 8.5pt; color: rgba(251,247,240,.6); }
+  </style>
+</head>
+<body>
+
+  <div class="head">
+    <div class="head-top">
+      <div class="brand">
+        <span class="brand-icon">
+          <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg>
+        </span>
+        <strong>SmartFeedback AI</strong>
+      </div>
+      <div class="head-contact">
+        smartfeedbackai.com<br>
+        jeaneveillard@gmail.com · Montréal, QC
+      </div>
+    </div>
+    <h1>Vos avis Google méritent une réponse. <em>Pas votre soirée.</em></h1>
+    <p>L'outil des restaurateurs du Québec qui rédige vos réponses aux avis Google, dans le ton de votre maison. Vous validez, c'est publié — 30 secondes par avis.</p>
+  </div>
+
+  <div class="body">
+    <div class="cols">
+      <div>
+        <p class="kicker">Comment ça marche</p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <div>
+              <h3>Connectez votre fiche Google</h3>
+              <p>Connexion officielle « Se connecter avec Google » (application vérifiée par Google). Aucun mot de passe partagé, rien à installer.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <div>
+              <h3>L'IA rédige dans votre ton</h3>
+              <p>Chaleureux, professionnel ou concis : la réponse s'adapte à la note, au contenu de l'avis et au prénom du client. En français impeccable.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <div>
+              <h3>Vous validez, c'est publié</h3>
+              <p>Relisez, ajustez si besoin, publiez. Rien ne part sur votre fiche sans votre accord.</p>
+            </div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>89<span> %</span></b><small>des consommateurs lisent les réponses des établissements aux avis (BrightLocal)</small></div>
+          <div class="stat"><b>30<span> s</span></b><small>par réponse au lieu de 10 minutes à chercher ses mots</small></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card card-review">
+          <div class="review-head">
+            <span class="avatar">MT</span>
+            <div class="review-meta">
+              <strong>Marc T.</strong>
+              <span class="stars">★★<span class="off">★★★</span></span> · il y a 2 jours · Google
+            </div>
+          </div>
+          <p class="txt">« Attente de 45 minutes un mardi soir. La bavette était bonne mais froide. Déçu, on était des habitués… »</p>
+        </div>
+        <div class="card card-reply">
+          <div class="reply-head">Réponse générée par l'IA — ton chaleureux</div>
+          <p class="txt">« Bonjour Marc, merci d'avoir pris le temps de nous écrire — et toutes nos excuses pour cette soirée qui n'était pas à la hauteur de vos habitudes. Nous serions honorés de nous rattraper : votre prochaine visite est pour nous. — L'équipe »</p>
+        </div>
+        <p class="demo-cap">Exemple réel généré par l'outil — modifiable avant publication.</p>
+      </div>
+    </div>
+
+    <div>
+      <p class="kicker">Ce que vous obtenez</p>
+      <div class="feats">
+        <div class="feat"><span><b>Réponses IA illimitées</b>, 4 tons personnalisables</span></div>
+        <div class="feat"><span><b>Tableau de bord</b> : tous vos avis au même endroit</span></div>
+        <div class="feat"><span><b>Analytique IA</b> : les sujets qui reviennent dans vos avis</span></div>
+        <div class="feat"><span><b>Validation avant publication</b>, toujours</span></div>
+        <div class="feat"><span><b>Export CSV</b> pour vos rapports</span></div>
+        <div class="feat"><span><b>Support direct</b> avec le fondateur</span></div>
+      </div>
+    </div>
+
+    <div class="offer">
+      <div class="offer-price">
+        <span class="offer-badge">Offre fondateur</span>
+        <div class="offer-amount">39 $<small>/mois</small> <span class="offer-was">79 $</span></div>
+      </div>
+      <div class="offer-body">
+        <h3>Devenez restaurant fondateur</h3>
+        <p><span class="green">Premier mois gratuit · sans engagement · prix garanti à vie.</span><br>
+        Démo de 15 minutes directement sur les avis de <b>votre</b> restaurant — sur place ou en visio. Prix en dollars canadiens.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div><b>Réservez votre démo :</b> jeaneveillard@gmail.com</div>
+    <div class="cta">smartfeedbackai.com · Essai gratuit en ligne</div>
+  </div>
+
+</body>
+</html>
