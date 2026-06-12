@@ -603,6 +603,14 @@
 
   <script>
     (function() {
+      // Ouverte depuis le disque (file://), l'app ne peut pas tourner —
+      // les CTA pointent alors vers le site en ligne.
+      if (window.location.protocol === 'file:') {
+        document.querySelectorAll('a[href="index.html"]').forEach(function(a) {
+          a.href = 'https://smartfeedbackai.com/';
+        });
+      }
+
       // Effet machine à écrire sur la réponse IA du hero
       var TEXT = "Bonjour Marc, merci d'avoir pris le temps de nous écrire — et toutes nos excuses pour cette soirée qui n'était pas à la hauteur de vos habitudes. L'attente et la température de votre bavette ne reflètent pas nos standards. Nous serions honorés de nous rattraper : passez nous voir, votre prochaine visite est pour nous. — L'équipe";
       var el = document.getElementById('typed');

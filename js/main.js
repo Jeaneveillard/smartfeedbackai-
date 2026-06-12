@@ -191,6 +191,18 @@
     // Demo on: file://, explicit flag, or localhost with no JWT (dev convenience)
     var demoMode = demoForced || isFileProtocol || (isLocalhost && !jwt);
 
+    // file:// — fetch() y est bloqué par le navigateur (origine null),
+    // l'app ne peut pas se charger depuis le disque : renvoyer vers le site.
+    if (isFileProtocol) {
+      document.body.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Inter,sans-serif;flex-direction:column;gap:14px;color:#6B7280;text-align:center;padding:20px;box-sizing:border-box;">' +
+        '<strong style="color:#111827;font-size:16px">SmartFeedback AI ne peut pas s\'ouvrir depuis un fichier local</strong>' +
+        '<p style="font-size:13px;max-width:440px;line-height:1.7;margin:0;">Ouvrez l\'application en ligne, ou lancez <code style="background:#F3F4F6;padding:2px 8px;border-radius:4px">npx serve .</code> dans le dossier du projet.</p>' +
+        '<a href="https://smartfeedbackai.com/" style="background:#4F46E5;color:#fff;text-decoration:none;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:600;">Ouvrir smartfeedbackai.com →</a>' +
+        '</div>';
+      return;
+    }
+
     // Demo mode: no backend configured → load mock JSON directly
     if (!jwt && demoMode) {
       Promise.all([
