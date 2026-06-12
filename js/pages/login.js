@@ -113,7 +113,7 @@ var LoginPage = (function() {
 
       '    <p style="font-size:12px;text-align:center;margin:16px 0 0;color:#57534E;">',
       '      ' + (lang === 'en' ? 'New here?' : 'Nouveau client ?') + ' ',
-      '      <a href="mailto:jeaneveillard@gmail.com" style="color:#4F46E5;text-decoration:none;font-weight:600;">',
+      '      <a href="mailto:contact@smartfeedbackai.com" style="color:#4F46E5;text-decoration:none;font-weight:600;">',
       '        ' + (lang === 'en' ? 'Request access →' : 'Demandez un accès →') +
       '      </a>',
       '    </p>',

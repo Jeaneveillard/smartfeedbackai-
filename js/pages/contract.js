@@ -13,7 +13,7 @@ var ContractModal = (function() {
     var sections = fr ? [
       {
         title: '1. Parties',
-        body:  '<p><strong>Fournisseur de services :</strong><br>Jean Eveillard Cazeau<br>jeaneveillard@gmail.com · 438-378-6703<br><em>ci-après désigné « SmartFeedback AI »</em></p>' +
+        body:  '<p><strong>Fournisseur de services :</strong><br>Jean Eveillard Cazeau<br>contact@smartfeedbackai.com · 438-378-6703<br><em>ci-après désigné « SmartFeedback AI »</em></p>' +
                '<p style="margin-top:10px;"><strong>Client :</strong> Tout établissement ou individu ayant accepté ce contrat lors de l\'inscription sur la plateforme SmartFeedback AI.</p>'
       },
       {
@@ -79,12 +79,12 @@ var ContractModal = (function() {
       },
       {
         title: '10. Contact',
-        body:  '<p><strong>Jean Eveillard Cazeau</strong><br>📧 jeaneveillard@gmail.com<br>📞 438-378-6703</p>'
+        body:  '<p><strong>Jean Eveillard Cazeau</strong><br>📧 contact@smartfeedbackai.com<br>📞 438-378-6703</p>'
       }
     ] : [
       {
         title: '1. Parties',
-        body:  '<p><strong>Service Provider:</strong><br>Jean Eveillard Cazeau<br>jeaneveillard@gmail.com · 438-378-6703<br><em>hereinafter referred to as "SmartFeedback AI"</em></p>' +
+        body:  '<p><strong>Service Provider:</strong><br>Jean Eveillard Cazeau<br>contact@smartfeedbackai.com · 438-378-6703<br><em>hereinafter referred to as "SmartFeedback AI"</em></p>' +
                '<p style="margin-top:10px;"><strong>Client:</strong> Any business or individual who accepted this agreement during registration on the SmartFeedback AI platform.</p>'
       },
       {
@@ -150,7 +150,7 @@ var ContractModal = (function() {
       },
       {
         title: '10. Contact',
-        body:  '<p><strong>Jean Eveillard Cazeau</strong><br>📧 jeaneveillard@gmail.com<br>📞 438-378-6703</p>'
+        body:  '<p><strong>Jean Eveillard Cazeau</strong><br>📧 contact@smartfeedbackai.com<br>📞 438-378-6703</p>'
       }
     ];
 
@@ -188,7 +188,7 @@ var ContractModal = (function() {
           '</button>' +
           '<p style="text-align:center;font-size:11px;color:#9CA3AF;margin:12px 0 0;">' +
             (fr ? 'Questions ? ' : 'Questions? ') +
-            '<a href="mailto:jeaneveillard@gmail.com" style="color:#4F46E5;">jeaneveillard@gmail.com</a> · 438-378-6703' +
+            '<a href="mailto:contact@smartfeedbackai.com" style="color:#4F46E5;">contact@smartfeedbackai.com</a> · 438-378-6703' +
           '</p>' +
         '</div>' +
       '</div>';

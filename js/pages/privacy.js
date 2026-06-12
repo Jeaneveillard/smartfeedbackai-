@@ -133,7 +133,7 @@ var PrivacyModal = (function() {
 
           '<p style="text-align:center;font-size:11px;color:#9CA3AF;margin:12px 0 0;">' +
             (fr ? 'Questions ? ' : 'Questions? ') +
-            '<a href="mailto:jeaneveillard@gmail.com" style="color:#4F46E5;">jeaneveillard@gmail.com</a>' +
+            '<a href="mailto:contact@smartfeedbackai.com" style="color:#4F46E5;">contact@smartfeedbackai.com</a>' +
           '</p>' +
 
         '</div>' +

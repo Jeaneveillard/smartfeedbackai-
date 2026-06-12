@@ -262,7 +262,7 @@ var LandingPage = (function() {
       '    <div>',
       '      <a href="/privacy" id="lpFooterPrivacy">' + s.footerPrivacy + '</a>',
       '      <a href="/terms" id="lpFooterContract">' + s.footerContract + '</a>',
-      '      <a href="mailto:jeaneveillard@gmail.com">' + s.footerContact + '</a>',
+      '      <a href="mailto:contact@smartfeedbackai.com">' + s.footerContact + '</a>',
       '    </div>',
       '  </footer>',
 
