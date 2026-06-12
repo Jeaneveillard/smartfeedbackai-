@@ -13,6 +13,9 @@ deploy.ps1
 .env
 .env.*
 test-*.png
+gbp-photo-*.png
+smartfeedbackai-logo-*.png
+smartfeedbackai-cover-*.png
 *.test.js
 test-playwright.js
 marketing
