@@ -9,6 +9,8 @@
 node_modules
 node_modules/**
 deploy.ps1
+worker.js
+wrangler.toml
 .cf-token
 .env
 .env.*

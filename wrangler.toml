@@ -1,6 +1,12 @@
 name = "smartfeedbackai"
+main = "worker.js"
 compatibility_date = "2024-01-01"
 
 [assets]
 directory = "."
+binding = "ASSETS"
 not_found_handling = "single-page-application"
+
+# Cron en UTC : 11h-23h59 + 0h-3h59 UTC = ~7h-minuit heure du Québec (été)
+[triggers]
+crons = ["*/10 11-23 * * *", "*/10 0-3 * * *"]
